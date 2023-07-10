@@ -43,3 +43,27 @@ CREATE DATABASE IF NOT EXISTS `pokedroid`;
 				PRIMARY KEY (poke_id),
 				FOREIGN KEY (poke_tipo) REFERENCES Tipo(tipo_id)
 			);
+            
+            CREATE TABLE IF NOT EXISTS pokedroid.`Utenza` (
+				uten_id bigint,
+                user_id bigint,
+                PRIMARY KEY(uten_id,user_id),
+                FOREIGN KEY (uten_id) REFERENCES Utente(uten_id),
+                FOREIGN KEY (user_id) REFERENCES `User`(user_id)
+            );
+            
+			CREATE TABLE IF NOT EXISTS pokedroid.`Amicizia` (
+				user_id_1 bigint,
+                user_id_2 bigint,
+                PRIMARY KEY(user_id_1,user_id_2),
+                FOREIGN KEY (user_id_1) REFERENCES `User`(user_id),
+                FOREIGN KEY (user_id_2) REFERENCES `User`(user_id)
+            );
+            
+            CREATE TABLE IF NOT EXISTS pokedroid.`Avanzamento` (
+				pokemon_id bigint,
+                pokedex_id bigint,
+                PRIMARY KEY(pokemon_id,pokedex_id),
+                FOREIGN KEY (pokemon_id) REFERENCES Pokemon(poke_id),
+                FOREIGN KEY (pokedex_id) REFERENCES Pokedex(poke_id)
+            );
