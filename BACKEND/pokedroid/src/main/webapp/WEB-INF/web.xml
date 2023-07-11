@@ -7,18 +7,14 @@
 	<display-name>pokedroid</display-name>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>default.html</welcome-file>
-		<welcome-file>default.jsp</welcome-file>
-		<welcome-file>default.htm</welcome-file>
 	</welcome-file-list>
-
+	
+	<!-- START amicizia servlet config -->
 	<servlet>
 		<description></description>
-		<display-name>MusicianServlet</display-name>
-		<servlet-name>MusicianServlet</servlet-name>
-		<servlet-class>it.uniroma2.pjdm.servletdb.servlet.MusicianServlet</servlet-class>
+		<display-name>AmiciziaServlet</display-name>
+		<servlet-name>AmiciziaServlet</servlet-name>
+		<servlet-class>it.uniroma2.cudia.pokedroid.servlet.AmiciziaServlet</servlet-class>
 		<init-param>
 			<param-name>ip</param-name>
 			<param-value>127.0.0.1</param-value>
@@ -29,19 +25,252 @@
 		</init-param>
 		<init-param>
 			<param-name>dbName</param-name>
-			<param-value>musicisti</param-value>
+			<param-value>pokedroid</param-value>
 		</init-param>
 		<init-param>
 			<param-name>userName</param-name>
-			<param-value>danilo</param-value>
+			<param-value>root</param-value>
 		</init-param>
 		<init-param>
 			<param-name>password</param-name>
-			<param-value>danilo</param-value>
+			<param-value>root</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>MusicianServlet</servlet-name>
-		<url-pattern>/MusicianServlet</url-pattern>
+		<servlet-name>AmiciziaServlet</servlet-name>
+		<url-pattern>/AmiciziaServlet</url-pattern>
 	</servlet-mapping>
+	<!-- END amicizia servlet config -->
+	
+	<!-- START avanzamento servlet config -->
+	<servlet>
+		<description></description>
+		<display-name>AvanzamentoServlet</display-name>
+		<servlet-name>AvanzamentoServlet</servlet-name>
+		<servlet-class>it.uniroma2.cudia.pokedroid.servlet.AvanzamentoServlet</servlet-class>
+		<init-param>
+			<param-name>ip</param-name>
+			<param-value>127.0.0.1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>port</param-name>
+			<param-value>3306</param-value>
+		</init-param>
+		<init-param>
+			<param-name>dbName</param-name>
+			<param-value>pokedroid</param-value>
+		</init-param>
+		<init-param>
+			<param-name>userName</param-name>
+			<param-value>root</param-value>
+		</init-param>
+		<init-param>
+			<param-name>password</param-name>
+			<param-value>root</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AvanzamentoServlet</servlet-name>
+		<url-pattern>/AvanzamentoServlet</url-pattern>
+	</servlet-mapping>
+	<!-- END avanzamento servlet config -->
+	
+	<!-- START pokedex servlet config -->
+	<servlet>
+		<description></description>
+		<display-name>PokedexServlet</display-name>
+		<servlet-name>PokedexServlet</servlet-name>
+		<servlet-class>it.uniroma2.cudia.pokedroid.servlet.PokedexServlet</servlet-class>
+		<init-param>
+			<param-name>ip</param-name>
+			<param-value>127.0.0.1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>port</param-name>
+			<param-value>3306</param-value>
+		</init-param>
+		<init-param>
+			<param-name>dbName</param-name>
+			<param-value>pokedroid</param-value>
+		</init-param>
+		<init-param>
+			<param-name>userName</param-name>
+			<param-value>root</param-value>
+		</init-param>
+		<init-param>
+			<param-name>password</param-name>
+			<param-value>root</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PokedexServlet</servlet-name>
+		<url-pattern>/PokedexServlet</url-pattern>
+	</servlet-mapping>
+	<!-- END pokedex servlet config -->
+	
+	<!-- START pokemon servlet config -->
+	<servlet>
+		<description></description>
+		<display-name>PokemonServlet</display-name>
+		<servlet-name>PokemonServlet</servlet-name>
+		<servlet-class>it.uniroma2.cudia.pokedroid.servlet.PokemonServlet</servlet-class>
+		<init-param>
+			<param-name>ip</param-name>
+			<param-value>127.0.0.1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>port</param-name>
+			<param-value>3306</param-value>
+		</init-param>
+		<init-param>
+			<param-name>dbName</param-name>
+			<param-value>pokedroid</param-value>
+		</init-param>
+		<init-param>
+			<param-name>userName</param-name>
+			<param-value>root</param-value>
+		</init-param>
+		<init-param>
+			<param-name>password</param-name>
+			<param-value>root</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PokemonServlet</servlet-name>
+		<url-pattern>/PokemonServlet</url-pattern>
+	</servlet-mapping>
+	<!-- END pokemon servlet config -->
+	
+	<!-- START tipo servlet config -->
+	<servlet>
+		<description></description>
+		<display-name>TipoServlet</display-name>
+		<servlet-name>TipoServlet</servlet-name>
+		<servlet-class>it.uniroma2.cudia.pokedroid.servlet.TipoServlet</servlet-class>
+		<init-param>
+			<param-name>ip</param-name>
+			<param-value>127.0.0.1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>port</param-name>
+			<param-value>3306</param-value>
+		</init-param>
+		<init-param>
+			<param-name>dbName</param-name>
+			<param-value>pokedroid</param-value>
+		</init-param>
+		<init-param>
+			<param-name>userName</param-name>
+			<param-value>root</param-value>
+		</init-param>
+		<init-param>
+			<param-name>password</param-name>
+			<param-value>root</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TipoServlet</servlet-name>
+		<url-pattern>/TipoServlet</url-pattern>
+	</servlet-mapping>
+	<!-- END tipo servlet config -->
+	
+	<!-- START user servlet config -->
+	<servlet>
+		<description></description>
+		<display-name>UserServlet</display-name>
+		<servlet-name>UserServlet</servlet-name>
+		<servlet-class>it.uniroma2.cudia.pokedroid.servlet.TipoServlet</servlet-class>
+		<init-param>
+			<param-name>ip</param-name>
+			<param-value>127.0.0.1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>port</param-name>
+			<param-value>3306</param-value>
+		</init-param>
+		<init-param>
+			<param-name>dbName</param-name>
+			<param-value>pokedroid</param-value>
+		</init-param>
+		<init-param>
+			<param-name>userName</param-name>
+			<param-value>root</param-value>
+		</init-param>
+		<init-param>
+			<param-name>password</param-name>
+			<param-value>root</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UserServlet</servlet-name>
+		<url-pattern>/UserServlet</url-pattern>
+	</servlet-mapping>
+	<!-- END user servlet config -->
+	
+	<!-- START utente servlet config -->
+	<servlet>
+		<description></description>
+		<display-name>UtenteServlet</display-name>
+		<servlet-name>UtenteServlet</servlet-name>
+		<servlet-class>it.uniroma2.cudia.pokedroid.servlet.UtenteServlet</servlet-class>
+		<init-param>
+			<param-name>ip</param-name>
+			<param-value>127.0.0.1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>port</param-name>
+			<param-value>3306</param-value>
+		</init-param>
+		<init-param>
+			<param-name>dbName</param-name>
+			<param-value>pokedroid</param-value>
+		</init-param>
+		<init-param>
+			<param-name>userName</param-name>
+			<param-value>root</param-value>
+		</init-param>
+		<init-param>
+			<param-name>password</param-name>
+			<param-value>root</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UtenteServlet</servlet-name>
+		<url-pattern>/UtenteServlet</url-pattern>
+	</servlet-mapping>
+	<!-- END utente servlet config -->
+	
+	<!-- START utenza servlet config -->
+	<servlet>
+		<description></description>
+		<display-name>UtentenzaServlet</display-name>
+		<servlet-name>UtentenzaServlet</servlet-name>
+		<servlet-class>it.uniroma2.cudia.pokedroid.servlet.UtentenzaServlet</servlet-class>
+		<init-param>
+			<param-name>ip</param-name>
+			<param-value>127.0.0.1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>port</param-name>
+			<param-value>3306</param-value>
+		</init-param>
+		<init-param>
+			<param-name>dbName</param-name>
+			<param-value>pokedroid</param-value>
+		</init-param>
+		<init-param>
+			<param-name>userName</param-name>
+			<param-value>root</param-value>
+		</init-param>
+		<init-param>
+			<param-name>password</param-name>
+			<param-value>root</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UtentenzaServlet</servlet-name>
+		<url-pattern>/UtentenzaServlet</url-pattern>
+	</servlet-mapping>
+	<!-- END utenza servlet config -->
+	
 </web-app>
