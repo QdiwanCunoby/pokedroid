@@ -1,5 +1,9 @@
 package it.uniroma2.cudia.pokedroid.dao;
 
-public class PokedexDAO {
+import it.uniroma2.cudia.pokedroid.entity.Pokedex;
+
+public interface PokedexDAO {
+	
+	public int createPokedex(Pokedex pokedex);
 
 }

@@ -1,5 +1,11 @@
 package it.uniroma2.cudia.pokedroid.dao;
 
-public class UtenteDAO {
+import it.uniroma2.cudia.pokedroid.entity.Utente;
+
+public interface UtenteDAO {
+	
+	public int createUtente(Utente utente);
+	
+	public int checkRegistrazioneUtenza(Utente utente);
 
 }

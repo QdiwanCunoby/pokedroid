@@ -1,5 +1,5 @@
 package it.uniroma2.cudia.pokedroid.dao;
 
-public class AmiciziaDAO {
+public interface AmiciziaDAO {
 
 }
