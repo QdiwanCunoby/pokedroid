@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS `pokedroid`;
 	
 			CREATE TABLE IF NOT EXISTS pokedroid.Utente (
 				uten_id bigint AUTO_INCREMENT,
-				uten_mail varchar(254) NOT NULL,
+				uten_mail varchar(254) NOT NULL UNIQUE,
 				uten_password varchar(255) NOT NULL,
 				PRIMARY KEY (uten_id)
 			);

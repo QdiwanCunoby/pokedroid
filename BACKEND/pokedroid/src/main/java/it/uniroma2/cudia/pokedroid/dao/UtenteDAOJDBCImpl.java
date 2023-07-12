@@ -30,13 +30,12 @@ public class UtenteDAOJDBCImpl implements UtenteDAO {
 
 	@Override
 	public int createUtente(Utente utente) {
-		String SQL = "INSERT INTO utenti(uten_id,uten_email,uten_password) " + "VALUES(?,?,?)";
+		String SQL = "INSERT INTO utente(uten_mail,uten_password) " + "VALUES(?,?)";
 
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
 
-			pstmt.setLong(1, utente.getIdUtente());
-			pstmt.setString(2, utente.getEmail());
+			pstmt.setString(1, utente.getEmail());
 			pstmt.setString(2, utente.getPassword());
 
 			int affectedRows = pstmt.executeUpdate();
