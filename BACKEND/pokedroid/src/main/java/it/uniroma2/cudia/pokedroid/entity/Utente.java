@@ -68,6 +68,7 @@ public class Utente {
 	}
 	
 	public static Utente fromJSON(String jsonString) throws JSONException {
+		System.out.println(jsonString);
 		JSONObject jsonObject = new JSONObject(jsonString);
 
 		if(!jsonObject.has("idUtente") || !jsonObject.has("email") || !jsonObject.has("password"))

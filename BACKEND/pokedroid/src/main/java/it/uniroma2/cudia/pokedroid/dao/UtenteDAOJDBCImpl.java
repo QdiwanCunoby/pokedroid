@@ -21,7 +21,7 @@ public class UtenteDAOJDBCImpl implements UtenteDAO {
 			
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
-			conn = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + dbName, userName, pwd);
+			conn = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + dbName+"?&serverTimezone=UTC", userName, pwd);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

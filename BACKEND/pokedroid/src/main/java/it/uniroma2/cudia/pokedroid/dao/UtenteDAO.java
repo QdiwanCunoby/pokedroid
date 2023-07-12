@@ -7,5 +7,7 @@ public interface UtenteDAO {
 	public int createUtente(Utente utente);
 	
 	public int checkRegistrazioneUtenza(Utente utente);
+	
+	public void closeConnection();
 
 }

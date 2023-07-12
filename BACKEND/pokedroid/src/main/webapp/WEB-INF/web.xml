@@ -5,9 +5,7 @@
 	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd http://xmlns.jcp.org/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="5.0">
 	<display-name>pokedroid</display-name>
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
+	
 	
 	<!-- START amicizia servlet config -->
 	<servlet>
@@ -29,11 +27,11 @@
 		</init-param>
 		<init-param>
 			<param-name>userName</param-name>
-			<param-value>root</param-value>
+			<param-value>qdwancunoby</param-value>
 		</init-param>
 		<init-param>
 			<param-name>password</param-name>
-			<param-value>root</param-value>
+			<param-value>vogliolaurearmi</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
@@ -62,11 +60,11 @@
 		</init-param>
 		<init-param>
 			<param-name>userName</param-name>
-			<param-value>root</param-value>
+			<param-value>qdwancunoby</param-value>
 		</init-param>
 		<init-param>
 			<param-name>password</param-name>
-			<param-value>root</param-value>
+			<param-value>vogliolaurearmi</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
@@ -95,11 +93,11 @@
 		</init-param>
 		<init-param>
 			<param-name>userName</param-name>
-			<param-value>root</param-value>
+			<param-value>qdwancunoby</param-value>
 		</init-param>
 		<init-param>
 			<param-name>password</param-name>
-			<param-value>root</param-value>
+			<param-value>vogliolaurearmi</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
@@ -128,11 +126,11 @@
 		</init-param>
 		<init-param>
 			<param-name>userName</param-name>
-			<param-value>root</param-value>
+			<param-value>qdwancunoby</param-value>
 		</init-param>
 		<init-param>
 			<param-name>password</param-name>
-			<param-value>root</param-value>
+			<param-value>vogliolaurearmi</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
@@ -161,11 +159,11 @@
 		</init-param>
 		<init-param>
 			<param-name>userName</param-name>
-			<param-value>root</param-value>
+			<param-value>qdwancunoby</param-value>
 		</init-param>
 		<init-param>
 			<param-name>password</param-name>
-			<param-value>root</param-value>
+			<param-value>vogliolaurearmi</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
@@ -194,11 +192,11 @@
 		</init-param>
 		<init-param>
 			<param-name>userName</param-name>
-			<param-value>root</param-value>
+			<param-value>qdwancunoby</param-value>
 		</init-param>
 		<init-param>
 			<param-name>password</param-name>
-			<param-value>root</param-value>
+			<param-value>vogliolaurearmi</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
@@ -227,11 +225,11 @@
 		</init-param>
 		<init-param>
 			<param-name>userName</param-name>
-			<param-value>root</param-value>
+			<param-value>qdwancunoby</param-value>
 		</init-param>
 		<init-param>
 			<param-name>password</param-name>
-			<param-value>root</param-value>
+			<param-value>vogliolaurearmi</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
@@ -260,11 +258,11 @@
 		</init-param>
 		<init-param>
 			<param-name>userName</param-name>
-			<param-value>root</param-value>
+			<param-value>qdwancunoby</param-value>
 		</init-param>
 		<init-param>
 			<param-name>password</param-name>
-			<param-value>root</param-value>
+			<param-value>vogliolaurearmi</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

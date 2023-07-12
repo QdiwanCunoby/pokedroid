@@ -1,20 +1,20 @@
 CREATE DATABASE IF NOT EXISTS `pokedroid`;
 	
-			CREATE TABLE IF NOT EXISTS pokedroid.Utenza (
-				uten_id bigint,
+			CREATE TABLE IF NOT EXISTS pokedroid.Utente (
+				uten_id bigint AUTO_INCREMENT,
 				uten_mail varchar(254) NOT NULL,
 				uten_password varchar(255) NOT NULL,
 				PRIMARY KEY (uten_id)
 			);
 			
 			CREATE TABLE IF NOT EXISTS pokedroid.Pokedex (
-				poke_id bigint,
+				poke_id bigint AUTO_INCREMENT,
 				poke_completamento int NOT NULL check(poke_completamento >= 0 AND poke_completamento<= 151),
 				PRIMARY KEY (poke_id)
 			);
 			
 			CREATE TABLE IF NOT EXISTS pokedroid.`User` (
-				user_id bigint,
+				user_id bigint AUTO_INCREMENT,
 				user_username varchar(50) NOT NULL,
 				user_genere bit NOT NULL,
 				user_id_pokedex bigint NOT NULL,
@@ -24,13 +24,13 @@ CREATE DATABASE IF NOT EXISTS `pokedroid`;
 			);
 			
 			CREATE TABLE IF NOT EXISTS pokedroid.`Tipo` (
-				tipo_id int,
-				tipo VARCHAR(9) NOT NULL check(tipo >= 1 AND tipo<= 15),
+				tipo_id int check(tipo_id >= 1 AND tipo_id<= 15),
+				tipo VARCHAR(9) NOT NULL,
 				PRIMARY KEY (tipo_id)
 			);
 			
 			CREATE TABLE IF NOT EXISTS pokedroid.`Pokemon` (
-				poke_id bigint,
+				poke_id bigint AUTO_INCREMENT,
 				poke_tipo int,
 				poke_forza int NOT NULL check(poke_forza >= 1 AND poke_forza<= 100),
 				poke_grinta int NOT NULL check(poke_grinta >= 1 AND poke_grinta <= 100),
@@ -45,7 +45,7 @@ CREATE DATABASE IF NOT EXISTS `pokedroid`;
 			);
             
             CREATE TABLE IF NOT EXISTS pokedroid.`Utenza` (
-				uten_id bigint,
+				uten_id bigint AUTO_INCREMENT,
                 user_id bigint,
                 PRIMARY KEY(uten_id,user_id),
                 FOREIGN KEY (uten_id) REFERENCES Utente(uten_id),
