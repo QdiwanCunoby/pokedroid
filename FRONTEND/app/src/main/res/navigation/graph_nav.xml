@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="it.cudia.studio.android.pokedroid.LoginFragment"
+        android:name="it.cudia.studio.android.pokedroid.fragment.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login">
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
-        android:name="it.cudia.studio.android.pokedroid.RegistrationFragment"
+        android:name="it.cudia.studio.android.pokedroid.fragment.RegistrationFragment"
         android:label="fragment_registration"
         tools:layout="@layout/fragment_registration">
         <action
@@ -31,7 +31,95 @@
     </fragment>
     <fragment
         android:id="@+id/listaPokemonFragment"
-        android:name="it.cudia.studio.android.pokedroid.ListaPokemonFragment"
+        android:name="it.cudia.studio.android.pokedroid.fragment.ListaPokemonFragment"
         android:label="fragment_lista_pokemon"
-        tools:layout="@layout/fragment_lista_pokemon" />
+        tools:layout="@layout/fragment_lista_pokemon" >
+        <action
+            android:id="@+id/action_listaPokemonFragment_to_pokemonStatisticsFragment"
+            app:destination="@id/pokemonStatisticsFragment" />
+        <action
+            android:id="@+id/action_listaPokemonFragment_to_riscattaPokemonFragment"
+            app:destination="@id/riscattaPokemonFragment" />
+        <action
+            android:id="@+id/action_listaPokemonFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pokemonStatisticsFragment"
+        android:name="it.cudia.studio.android.pokedroid.fragment.PokemonStatisticsFragment"
+        android:label="fragment_pokemon_statistics"
+        tools:layout="@layout/fragment_pokemon_statistics" >
+        <action
+            android:id="@+id/action_pokemonStatisticsFragment_to_listaPokemonFragment"
+            app:destination="@id/listaPokemonFragment" />
+        <action
+            android:id="@+id/action_pokemonStatisticsFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/riscattaPokemonFragment"
+        android:name="it.cudia.studio.android.pokedroid.fragment.RiscattaPokemonFragment"
+        android:label="fragment_riscatta_pokemon"
+        tools:layout="@layout/fragment_riscatta_pokemon" >
+        <action
+            android:id="@+id/action_riscattaPokemonFragment_to_listaPokemonFragment"
+            app:destination="@id/listaPokemonFragment" />
+        <action
+            android:id="@+id/action_riscattaPokemonFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="it.cudia.studio.android.pokedroid.fragment.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_friendsListFragment"
+            app:destination="@id/friendsListFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_pokemonStatisticsFragment"
+            app:destination="@id/pokemonStatisticsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_listaPokemonFragment"
+            app:destination="@id/listaPokemonFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_riscattaPokemonFragment"
+            app:destination="@id/riscattaPokemonFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_resetPasswordFragment"
+            app:destination="@id/resetPasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/friendsListFragment"
+        android:name="it.cudia.studio.android.pokedroid.fragment.friendsListFragment"
+        android:label="fragment_friends_list"
+        tools:layout="@layout/fragment_friends_list" >
+        <action
+            android:id="@+id/action_friendsListFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_friendsListFragment_to_sendFrindshipRequestFragment"
+            app:destination="@id/sendFrindshipRequestFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/sendFrindshipRequestFragment"
+        android:name="it.cudia.studio.android.pokedroid.fragment.SendFrindshipRequestFragment"
+        android:label="fragment_send_frindship_request"
+        tools:layout="@layout/fragment_send_frindship_request" >
+        <action
+            android:id="@+id/action_sendFrindshipRequestFragment_to_friendsListFragment"
+            app:destination="@id/friendsListFragment" />
+        <action
+            android:id="@+id/action_sendFrindshipRequestFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="it.cudia.studio.android.pokedroid.fragment.ResetPasswordFragment"
+        android:label="fragment_reset_password"
+        tools:layout="@layout/fragment_reset_password" >
+        <action
+            android:id="@+id/action_resetPasswordFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
 </navigation>

@@ -1,4 +1,4 @@
-package it.cudia.studio.android.pokedroid;
+package it.cudia.studio.android.pokedroid.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import java.util.Objects;
 import java.util.logging.LogManager;
+
+import it.cudia.studio.android.pokedroid.R;
 
 public class MainActivity extends AppCompatActivity {
 

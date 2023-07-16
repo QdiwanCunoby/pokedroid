@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.LoginFragment">
+    android:background="#1A1A1B"
+    tools:context=".fragment.ProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#1A1A1B">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -51,47 +51,72 @@
                     android:src="@drawable/circular_user"></ImageView>
             </androidx.cardview.widget.CardView>
 
-            <EditText
-                android:id="@+id/editTextTextEmailAddress2"
+            <TextView
+                android:id="@+id/tvUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="15dp"
-                android:layout_marginVertical="7.5dp"
-                android:background="@drawable/custom_text_field"
-                android:backgroundTint="@color/input_background"
-                android:ems="10"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:padding="10dp"
+                android:text="Username"
                 android:textColor="@color/black"
-                android:textColorHint="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/editTextTextEmailAddress"
+            <TextView
+                android:id="@+id/tvEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="15dp"
-                android:layout_marginVertical="7.5dp"
-                android:background="@drawable/custom_text_field"
-                android:backgroundTint="@color/input_background"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:padding="10dp"
+                android:text="Eamail"
                 android:textColor="@color/black"
-                android:textColorHint="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:text="Pokedex :"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0%"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btAccedi2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/custom_button_red"
+                android:padding="5dp"
+                android:text="Cambio Password"
+                android:textAllCaps="false"
+                android:textColor="@color/input_background"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:cornerRadius="20dp" />
 
             <Button
                 android:id="@+id/btAccedi"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/custom_button_red"
                 android:padding="5dp"
-                android:text="Accedi"
+                android:text="Lista Amici"
                 android:textAllCaps="false"
                 android:textColor="@color/input_background"
                 android:textSize="30sp"
@@ -101,17 +126,17 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tvRegistrati"
+            android:id="@+id/tvRegistrati2"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            android:text="Registrati"
+            android:text="Logout"
             android:textColor="#817F7F"
             android:textSize="30sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>

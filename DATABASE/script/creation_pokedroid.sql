@@ -25,12 +25,13 @@ CREATE DATABASE IF NOT EXISTS `pokedroid`;
 			
 			CREATE TABLE IF NOT EXISTS pokedroid.`Tipo` (
 				tipo_id int check(tipo_id >= 1 AND tipo_id<= 15),
-				tipo VARCHAR(9) NOT NULL,
+				tipo VARCHAR(20) NOT NULL,
 				PRIMARY KEY (tipo_id)
 			);
 			
 			CREATE TABLE IF NOT EXISTS pokedroid.`Pokemon` (
 				poke_id bigint AUTO_INCREMENT,
+                poke_nome varchar(35),
 				poke_tipo int,
 				poke_forza int NOT NULL check(poke_forza >= 1 AND poke_forza<= 100),
 				poke_grinta int NOT NULL check(poke_grinta >= 1 AND poke_grinta <= 100),

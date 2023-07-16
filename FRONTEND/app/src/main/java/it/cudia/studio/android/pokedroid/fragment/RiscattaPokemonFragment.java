@@ -1,4 +1,4 @@
-package it.cudia.studio.android.pokedroid;
+package it.cudia.studio.android.pokedroid.fragment;
 
 import android.os.Bundle;
 
@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import it.cudia.studio.android.pokedroid.R;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ListaPokemonFragment#newInstance} factory method to
+ * Use the {@link RiscattaPokemonFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ListaPokemonFragment extends Fragment {
+public class RiscattaPokemonFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +26,7 @@ public class ListaPokemonFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public ListaPokemonFragment() {
+    public RiscattaPokemonFragment() {
         // Required empty public constructor
     }
 
@@ -34,11 +36,11 @@ public class ListaPokemonFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ListaPokemonFragment.
+     * @return A new instance of fragment RiscattaPokemonFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ListaPokemonFragment newInstance(String param1, String param2) {
-        ListaPokemonFragment fragment = new ListaPokemonFragment();
+    public static RiscattaPokemonFragment newInstance(String param1, String param2) {
+        RiscattaPokemonFragment fragment = new RiscattaPokemonFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,6 +61,6 @@ public class ListaPokemonFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lista_pokemon, container, false);
+        return inflater.inflate(R.layout.fragment_riscatta_pokemon, container, false);
     }
 }
