@@ -2,13 +2,21 @@ package it.cudia.studio.android.pokedroid.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.adapter.PokeCardRecyclerViewAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +24,8 @@ import it.cudia.studio.android.pokedroid.R;
  * create an instance of this fragment.
  */
 public class ListaPokemonFragment extends Fragment {
+
+    private RecyclerView pokeCard;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,7 +70,20 @@ public class ListaPokemonFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+       View view = inflater.inflate(R.layout.fragment_lista_pokemon, container, false);
+
+        // data to populate the RecyclerView with
+        String[] data = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48"};
+        Log.d("Ciaone", "onCreateView() called with: inflater = [" + inflater + "], container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewListaPokemon);
+        int numberOfColumns = 2;
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),numberOfColumns, GridLayoutManager.VERTICAL, false));
+        PokeCardRecyclerViewAdapter adapter = new PokeCardRecyclerViewAdapter(getContext(),data);
+        recyclerView.setAdapter(adapter);
+        Log.d("Ciaone", "onCreateView() called with: inflater = [" + inflater + "], container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lista_pokemon, container, false);
+        return view;
     }
 }
