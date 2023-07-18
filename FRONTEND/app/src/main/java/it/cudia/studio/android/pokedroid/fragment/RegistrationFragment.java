@@ -6,12 +6,15 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +31,8 @@ public class RegistrationFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
 
     public RegistrationFragment() {
         // Required empty public constructor
@@ -58,6 +63,8 @@ public class RegistrationFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -74,7 +81,7 @@ public class RegistrationFragment extends Fragment {
             }
         });
 
-        Button btRegistrati = v.findViewById(R.id.btAccedi);
+        Button btRegistrati = v.findViewById(R.id.btListaAmici);
 
         btRegistrati.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,4 +93,26 @@ public class RegistrationFragment extends Fragment {
 
         return v;
     }
+
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        PokedroidToolbar.disableBackNavigation();
+       // PokedroidToolbar.enableProfileIcon();
+       // MenuItem item = menu.findItem(R.id.menu_profile);
+        //item.setVisible(false);
+        //PokedroidToolbar.disableProfileIcon();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){
+        super.onCreateOptionsMenu(menu,menuInflater);
+
+        PokedroidToolbar.disableProfileIcon();
+
+    }
+
+
 }

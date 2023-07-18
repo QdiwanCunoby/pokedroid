@@ -34,7 +34,7 @@ public class PokeCardRecyclerViewAdapter extends RecyclerView.Adapter<PokeCardRe
 
     @Override
     public void onBindViewHolder(@NonNull PokeCardRecyclerViewAdapter.ViewHolder holder, int position) {
-        //holder.cardTextView.setText(mData[position]);
+        holder.cardTextView.setText("n."+mData[position]);
     }
 
     @Override

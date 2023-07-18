@@ -96,7 +96,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/btAccedi2"
+                android:id="@+id/btCambioPassword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"
@@ -110,7 +110,7 @@
                 app:cornerRadius="20dp" />
 
             <Button
-                android:id="@+id/btAccedi"
+                android:id="@+id/btListaAmici"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"

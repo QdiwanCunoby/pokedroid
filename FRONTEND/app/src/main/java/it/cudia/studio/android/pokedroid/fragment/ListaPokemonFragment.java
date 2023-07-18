@@ -5,18 +5,25 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.adapter.PokeCardRecyclerViewAdapter;
+import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,6 +72,8 @@ public class ListaPokemonFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -73,9 +82,17 @@ public class ListaPokemonFragment extends Fragment {
 
        View view = inflater.inflate(R.layout.fragment_lista_pokemon, container, false);
 
+       FloatingActionButton addPokemon = view.findViewById(R.id.addPokemon);
+
+        addPokemon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(ListaPokemonFragment.this).navigate(R.id.action_listaPokemonFragment_to_riscattaPokemonFragment);
+            }
+        });
+
         // data to populate the RecyclerView with
         String[] data = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48"};
-        Log.d("Ciaone", "onCreateView() called with: inflater = [" + inflater + "], container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewListaPokemon);
         int numberOfColumns = 2;
         recyclerView.setHasFixedSize(true);
@@ -84,6 +101,24 @@ public class ListaPokemonFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         Log.d("Ciaone", "onCreateView() called with: inflater = [" + inflater + "], container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
         // Inflate the layout for this fragment
+
         return view;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){
+        super.onCreateOptionsMenu(menu,menuInflater);
+
+        menu.findItem(R.id.menu_profile).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                NavHostFragment.findNavController(ListaPokemonFragment.this).navigate(R.id.action_listaPokemonFragment_to_profileFragment);
+                return true;
+            }
+        });
+    }
+
+
+
+
 }

@@ -2,13 +2,19 @@ package it.cudia.studio.android.pokedroid.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,12 +61,45 @@ public class ProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        Button changePassword = view.findViewById(R.id.btCambioPassword);
+
+        changePassword.setOnClickListener( new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(ProfileFragment.this).navigate(R.id.action_profileFragment_to_resetPasswordFragment);
+
+            }
+        });
+
+        Button friendList = view.findViewById(R.id.btListaAmici);
+
+        friendList.setOnClickListener( new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(ProfileFragment.this).navigate(R.id.action_profileFragment_to_friendsListFragment);
+
+            }
+        });
+
+        return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        PokedroidToolbar.enableBackNavigation();
+        PokedroidToolbar.disableProfileIcon();
     }
 }

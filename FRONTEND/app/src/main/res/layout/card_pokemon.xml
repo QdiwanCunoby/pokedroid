@@ -26,14 +26,19 @@
             android:id="@+id/pokeImage"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_gravity="center"
+            android:layout_gravity="center|top"
+            android:paddingTop="15dp"
             app:srcCompat="@drawable/baseline_question_mark_white" />
 
         <TextView
             android:id="@+id/pokeNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal" />
+            android:layout_gravity="bottom|center_horizontal"
+            android:paddingBottom="15dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

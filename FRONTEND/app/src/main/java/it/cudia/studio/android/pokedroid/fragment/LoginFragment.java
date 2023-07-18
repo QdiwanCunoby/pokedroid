@@ -6,12 +6,15 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +61,8 @@ public class LoginFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -74,7 +79,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        Button btAccedi = v.findViewById(R.id.btAccedi);
+        Button btAccedi = v.findViewById(R.id.btListaAmici);
 
         btAccedi.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,5 +90,12 @@ public class LoginFragment extends Fragment {
         });
 
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){
+        super.onCreateOptionsMenu(menu,menuInflater);
+        //getMenuInflater().inflate(R.menu.menu_profile, menu);
+        PokedroidToolbar.disableProfileIcon();
     }
 }
