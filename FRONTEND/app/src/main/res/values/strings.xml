@@ -9,4 +9,5 @@
     <string name="stat_difesa">difesa</string>
     <string name="stat_astuzia">astuzia</string>
     <string name="stat_resistenza">resistenza</string>
+    <string name="base_url">http://192.168.1.58:8080/pokedroid/</string>
 </resources>

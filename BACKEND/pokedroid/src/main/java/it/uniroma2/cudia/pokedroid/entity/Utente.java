@@ -18,6 +18,13 @@ public class Utente {
 		this.password = password;
 	}
 	
+	public Utente(String email, String password) {
+		super();
+		this.idUtente = 0;
+		this.email = email;
+		this.password = password;
+	}
+	
 	public Utente() {}
 
 	@Override
@@ -71,14 +78,13 @@ public class Utente {
 		System.out.println(jsonString);
 		JSONObject jsonObject = new JSONObject(jsonString);
 
-		if(!jsonObject.has("idUtente") || !jsonObject.has("email") || !jsonObject.has("password"))
+		if(!jsonObject.has("email") || !jsonObject.has("password"))
 			throw new JSONException("Where are the idUtente or email or password?");
 		
-		long idUtente = jsonObject.getLong("idUtente");
 		String email = jsonObject.getString("email");
 		String password = jsonObject.getString("password");
 
-		return new Utente(idUtente,email ,password);
+		return new Utente(email ,password);
 	}
 
 	public String toJsonString() {

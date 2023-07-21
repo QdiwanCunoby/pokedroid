@@ -241,9 +241,9 @@
 	<!-- START utenza servlet config -->
 	<servlet>
 		<description></description>
-		<display-name>UtentenzaServlet</display-name>
-		<servlet-name>UtentenzaServlet</servlet-name>
-		<servlet-class>it.uniroma2.cudia.pokedroid.servlet.UtentenzaServlet</servlet-class>
+		<display-name>UtenzaServlet</display-name>
+		<servlet-name>UtenzaServlet</servlet-name>
+		<servlet-class>it.uniroma2.cudia.pokedroid.servlet.UtenzaServlet</servlet-class>
 		<init-param>
 			<param-name>ip</param-name>
 			<param-value>127.0.0.1</param-value>
@@ -266,8 +266,8 @@
 		</init-param>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>UtentenzaServlet</servlet-name>
-		<url-pattern>/UtentenzaServlet</url-pattern>
+		<servlet-name>UtenzaServlet</servlet-name>
+		<url-pattern>/UtenzaServlet</url-pattern>
 	</servlet-mapping>
 	<!-- END utenza servlet config -->
 	

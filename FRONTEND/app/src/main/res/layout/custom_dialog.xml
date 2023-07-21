@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivIconDialog"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:src="@drawable/pika_icon">
+
+    </ImageView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_card"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTitleDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="11dp"
+            android:gravity="center"
+            android:text="Succes"
+            android:textColor="@color/black"
+            android:textSize="34sp"
+            android:textStyle="bold"></TextView>
+
+        <TextView
+            android:id="@+id/tvContentDiaolog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="11dp"
+            android:gravity="center"
+            android:text="Account reggistrato correttamente"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"></TextView>
+
+        <Button
+            android:id="@+id/btOkDialogRegistration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/button_red"
+            android:text="OK"
+            android:textColor="@color/white"
+            android:textSize="34sp"></Button>
+    </LinearLayout>
+
+</LinearLayout>

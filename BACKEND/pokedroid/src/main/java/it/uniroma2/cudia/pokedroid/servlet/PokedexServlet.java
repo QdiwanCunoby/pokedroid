@@ -3,6 +3,7 @@ package it.uniroma2.cudia.pokedroid.servlet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -59,11 +60,17 @@ public class PokedexServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		
-		if(dao.createPokedex() != 1) {
-			response.getWriter().append("false");
-		}
-		else {
-			response.getWriter().append("true");
+		try {
+			if(dao.createPokedex() == -1) {
+				
+				response.getWriter().append("false");
+			}
+			else {
+				response.getWriter().append("true");
+			}
+		} catch (SQLException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return;

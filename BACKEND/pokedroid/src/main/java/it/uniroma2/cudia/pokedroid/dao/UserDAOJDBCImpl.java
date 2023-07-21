@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
@@ -27,25 +28,51 @@ public class UserDAOJDBCImpl implements UserDAO {
 	}
 
 	@Override
-	public int createUser(User user) {
-		String SQL = "INSERT INTO user(user_username,user_genere,user_id_pokedex,user_codice_amico) " + "VALUES(?,?,?,?,?)";
-
+	public int createUser(User user) throws SQLException {
+		String SQL_INSERT = "INSERT INTO user(user_username,user_genere,user_id_pokedex,user_codice_amico) " + "VALUES(?,?,?,?)";
+		String SQL_TAKE_ID = "SELECT LAST_INSERT_ID()";
+		int affectedRows = 0;
+		ResultSet resultSetId = null;
+		conn.setAutoCommit(false);
+		
 		try {
-			PreparedStatement pstmt = conn.prepareStatement(SQL);
-
+			
+			PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT);
 			pstmt.setString(1, user.getUsername());
 			pstmt.setBoolean(2, user.isGenere());
 			pstmt.setLong(3, user.getIdPokedex());
 			pstmt.setString(4, user.getCodiceAmico());
-			
-			int affectedRows = pstmt.executeUpdate();
-
-			return affectedRows;
+			affectedRows = pstmt.executeUpdate();
 
 		} catch (SQLException e) {
+			
+			conn.rollback();
 			e.printStackTrace();
 			return -1;
+			
 		}
+		
+		try {
+			
+			PreparedStatement pstmt = conn.prepareStatement(SQL_TAKE_ID);
+			resultSetId = pstmt.executeQuery();
+
+		} catch (SQLException e) {
+
+			conn.rollback();
+			e.printStackTrace();
+			return -1;
+		
+		}
+		
+		conn.commit();
+		
+		if(resultSetId.next()) {
+			System.out.println("last id in user table insert is : " + resultSetId.getInt(1));
+			return resultSetId.getInt(1);
+		}
+
+		return -1;
 	}
 	
 	public void closeConnection() {

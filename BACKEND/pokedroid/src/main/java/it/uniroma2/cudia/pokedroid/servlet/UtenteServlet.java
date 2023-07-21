@@ -3,6 +3,7 @@ package it.uniroma2.cudia.pokedroid.servlet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -79,11 +80,19 @@ public class UtenteServlet extends HttpServlet {
 			return;
 		}
 		
-		if(dao.createUtente(utente) != 1) {
-			response.getWriter().append("false");
-		}
-		else {
-			response.getWriter().append("true");
+		try {
+			if(dao.createUtente(utente) == -1) {
+				response.getWriter().append("false");
+			}
+			else {
+				response.getWriter().append("true");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return;

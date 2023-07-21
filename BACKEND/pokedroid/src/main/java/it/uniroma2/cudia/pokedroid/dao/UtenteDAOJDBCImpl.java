@@ -29,23 +29,49 @@ public class UtenteDAOJDBCImpl implements UtenteDAO {
 	}
 
 	@Override
-	public int createUtente(Utente utente) {
-		String SQL = "INSERT INTO utente(uten_mail,uten_password) " + "VALUES(?,?)";
+	public int createUtente(Utente utente) throws SQLException {
+		String SQL_INSERT = "INSERT INTO utente(uten_mail,uten_password) " + "VALUES(?,?)";
+		String SQL_TAKE_ID = "SELECT LAST_INSERT_ID()";
+		int affectedRows = 0;
+		ResultSet resultSetId = null;
+		conn.setAutoCommit(false);
 
 		try {
-			PreparedStatement pstmt = conn.prepareStatement(SQL);
-
+			
+			PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT);
 			pstmt.setString(1, utente.getEmail());
 			pstmt.setString(2, utente.getPassword());
-
-			int affectedRows = pstmt.executeUpdate();
-
-			return affectedRows;
+			affectedRows = pstmt.executeUpdate();
 
 		} catch (SQLException e) {
+		
+			conn.rollback();
 			e.printStackTrace();
 			return -1;
+		
 		}
+		
+		try {
+			
+			PreparedStatement pstmt = conn.prepareStatement(SQL_TAKE_ID);
+			resultSetId = pstmt.executeQuery();
+
+		} catch (SQLException e) {
+
+			conn.rollback();
+			e.printStackTrace();
+			return -1;
+		
+		}
+		
+		conn.commit();
+		
+		if(resultSetId.next()) {
+			System.out.println("last id in utente table insert is : " + resultSetId.getInt(1));
+			return resultSetId.getInt(1);
+		}
+
+		return -1;
 	}
 
 	@Override

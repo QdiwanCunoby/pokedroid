@@ -4,17 +4,17 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
-import it.uniroma2.cudia.pokedroid.entity.Pokedex;
+import it.uniroma2.cudia.pokedroid.entity.Utenza;
 
-public class PokedexDAOJDBCImpl implements PokedexDAO {
+public class UtenzaDAOJDBCImpl implements UtenzaDAO {
 	
-	private Connection conn;
+private Connection conn;
 	
-	public PokedexDAOJDBCImpl(String ip, String port, String dbName, String userName, String pwd) {
+	public UtenzaDAOJDBCImpl(String ip, String port, String dbName, String userName, String pwd) {
+		
 		try {
 			
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -27,18 +27,18 @@ public class PokedexDAOJDBCImpl implements PokedexDAO {
 	}
 
 	@Override
-	public int createPokedex() throws SQLException {
-		String SQL_INSERT = "INSERT INTO pokedex(poke_completamento) " + "VALUES(0)";
-		int affectedRows;
-		ResultSet resultSetId = null;
+	public int createUtenza(Utenza utenza) throws SQLException {
+		String SQL_INSERT = "INSERT INTO utenza(uten_id,user_id) " + "VALUES(?,?)";
+		int affectedRows = 0;
 		conn.setAutoCommit(false);
 		
 		try {
 			
 			PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT);
+			pstmt.setLong(1, utenza.getUtenteId());
+			pstmt.setLong(2, utenza.getUserId());
 			affectedRows = pstmt.executeUpdate();
-			
-			
+
 		} catch (SQLException e) {
 		
 			conn.rollback();
@@ -47,31 +47,12 @@ public class PokedexDAOJDBCImpl implements PokedexDAO {
 		
 		}
 		
-		try {
-			
-			String SQL_TAKE_ID = "SELECT LAST_INSERT_ID()";
-			PreparedStatement pstmt = conn.prepareStatement(SQL_TAKE_ID);
-			resultSetId = pstmt.executeQuery();
-		
-		}
-		catch (SQLException e){
-			
-			conn.rollback();
-			e.printStackTrace();
-			return -1;
-			
-		}
-		
 		conn.commit();
-		
-		if(resultSetId.next()) {
-			System.out.println("last id in pokedex table insert is : " + resultSetId.getInt(1));
-			return resultSetId.getInt(1);
-		}
-		
-		return -1;
-	}
 	
+		return affectedRows;
+	}
+
+	@Override
 	public void closeConnection() {
 		try {
 			conn.close();
@@ -89,4 +70,5 @@ public class PokedexDAOJDBCImpl implements PokedexDAO {
 			e.printStackTrace();
 		}
 	}
+
 }
