@@ -5,16 +5,26 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
+import it.cudia.studio.android.pokedroid.request.BooleanRequest;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
+import it.cudia.studio.android.pokedroid.singleton.SingletonVolley;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +32,8 @@ import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
  * create an instance of this fragment.
  */
 public class LoginFragment extends Fragment {
+
+    private static final String TAG = "LoginFragment";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -63,6 +75,10 @@ public class LoginFragment extends Fragment {
         }
 
         setHasOptionsMenu(true);
+
+        RequestQueue queue = SingletonVolley.getInstance(getActivity().getApplicationContext()).
+                getRequestQueue();
+
     }
 
     @Override
@@ -79,18 +95,60 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        EditText email = v.findViewById(R.id.etEmailAccedi);
+        EditText password = v.findViewById(R.id.etPasswordAccedi);
+
         Button btAccedi = v.findViewById(R.id.btListaAmici);
+        CustomDialog dialog = new CustomDialog();
+
 
         btAccedi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_listaPokemonFragment);
+
+                Log.d(TAG, "onClick() called with: v = [" + v + "]");
+                if(email.getText().toString().equals("") || password.getText().toString().equals("")){
+                    Log.d(TAG, "email "+email.getText().toString()+" password "+password.getText().toString());
+                    dialog.setDialogWrong("Nessun campo deve essere lasciato vuoto");
+                    dialog.show(getFragmentManager(),"CustomDialog");
+                    return;
+                }
+                //NavHostFragment.findNavController(RegistrationFragment.this).navigate(R.id.action_registrationFragment_to_listaPokemonFragment);
+                String url = getResources().getString(R.string.base_url)+"UtenteServlet?email="+email.getText().toString()+"&password="+password.getText().toString()+"";
+                BooleanRequest jsonObjectRequest = new BooleanRequest
+                        (Request.Method.GET, url, null, new Response.Listener<Boolean>() {
+                            @Override
+                            public void onResponse(Boolean response) {
+                                Log.d(TAG, url);
+                                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                                if(response){
+                                    dialog.setDialogRight("Loggin effettuato correttamente");
+                                    dialog.show(getFragmentManager(),"CustomDialog");
+                                    NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_listaPokemonFragment);
+                                }else {
+                                    dialog.setDialogWarning("Loggin effettuato non corretto");
+                                    dialog.show(getFragmentManager(),"CustomDialog");
+                                }
+                            }
+                        }
+                                , new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO: Handle error
+                                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                            }
+                        });
+
+                SingletonVolley.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
 
             }
+
         });
 
         return v;
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){

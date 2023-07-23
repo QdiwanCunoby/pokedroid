@@ -36,8 +36,14 @@ public class CustomDialog extends DialogFragment {
             labelIcon.setImageResource(R.drawable.zubat_icon);
             label.setText("WRONG");
             content.setText(contenutoDialog);
-        }else{
+        }else if(typeDialog == type_dialog.RIGHT){
             labelIcon.setImageResource(R.drawable.pika_icon);
+            label.setText("Succes");
+            content.setText(contenutoDialog);
+        } else if (typeDialog == type_dialog.WARNING) {
+            labelIcon.setImageResource(R.drawable.meowth_icon);
+            label.setText("Warning");
+            content.setText(contenutoDialog);
         }
 
         okButton.setOnClickListener(new View.OnClickListener() {
@@ -61,9 +67,15 @@ public class CustomDialog extends DialogFragment {
         typeDialog = type_dialog.RIGHT;
         this.contenutoDialog = contenutoDialog;
     }
+
+    public void setDialogWarning(String contenutoDialog){
+        typeDialog = type_dialog.WARNING;
+        this.contenutoDialog = contenutoDialog;
+    }
 }
 
 enum type_dialog{
     WRONG,
-    RIGHT
+    RIGHT,
+    WARNING
 }

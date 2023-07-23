@@ -8,7 +8,7 @@ public interface UtenteDAO {
 	
 	public int createUtente(Utente utente) throws SQLException;
 	
-	public int checkRegistrazioneUtenza(Utente utente);
+	public int checkRegistrazioneUtenza(String email, String password);
 	
 	public void closeConnection();
 

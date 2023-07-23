@@ -1,9 +1,7 @@
 package it.cudia.studio.android.pokedroid.fragment;
 
-import android.app.Dialog;
 import android.os.Bundle;
 
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -17,19 +15,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import it.cudia.studio.android.pokedroid.R;
-import it.cudia.studio.android.pokedroid.activity.MainActivity;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
 import it.cudia.studio.android.pokedroid.request.BooleanRequest;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
@@ -101,7 +96,7 @@ public class RegistrationFragment extends Fragment {
 
         EditText email = v.findViewById(R.id.etEmail);
         EditText confermaEmail = v.findViewById(R.id.etConfermaEmail);
-        EditText password = v.findViewById(R.id.etPassword);
+        EditText password = v.findViewById(R.id.etPasswordAccedi);
         EditText confermaPassword = v.findViewById(R.id.etConfermaPassword);
         EditText username =  v.findViewById(R.id.etUsername);
         RadioGroup genere = v.findViewById(R.id.genere);

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
@@ -24,6 +25,33 @@ private Connection conn;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public int checkUtenza(Utenza utenza) throws SQLException {
+		String SQL_SELECT = "SELECT * FROM utenza WHERE utente_id=" + utenza.getUserId() +"user_id="+ utenza.getUserId();
+		ResultSet affectedRows = null;
+		conn.setAutoCommit(false);
+		
+		try {
+			
+			PreparedStatement pstmt = conn.prepareStatement(SQL_SELECT);
+			affectedRows = pstmt.executeQuery();
+			
+			if(!affectedRows.first()) {
+				return -1;
+			}
+
+		} catch (SQLException e) {
+		
+			conn.rollback();
+			e.printStackTrace();
+			return -1;
+		
+		}
+		conn.commit();
+		
+		return 1;
 	}
 
 	@Override

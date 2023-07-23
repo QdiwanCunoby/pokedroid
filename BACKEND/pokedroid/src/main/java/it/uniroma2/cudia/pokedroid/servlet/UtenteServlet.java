@@ -104,33 +104,8 @@ public class UtenteServlet extends HttpServlet {
 		System.out.println("UtenteServlet. Invoking a doGet method.");
 		
 		PrintWriter out = response.getWriter();
-	
-		BufferedReader reader = request.getReader();
-	    String line;
-	    StringBuilder sb = new StringBuilder();
-	    
-		while ((line = reader.readLine()) != null) {
-	      sb.append(line);
-	    }
-	   
-		String jsonDataUtente =  sb.toString();
 		
-		Utente utente = null;
-		
-		try {
-			utente = Utente.fromJSON(jsonDataUtente);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		if( utente.getEmail() == null || utente.getEmail() == null ) {
-			response.setStatus(404);
-			response.getWriter().append("password or email are null");
-			return;
-		}
-		
-		if(dao.checkRegistrazioneUtenza(utente) != 1) {
+		if(dao.checkRegistrazioneUtenza(request.getParameter("email"),request.getParameter("password")) == -1) {
 			response.getWriter().append("false");
 		}
 		else {

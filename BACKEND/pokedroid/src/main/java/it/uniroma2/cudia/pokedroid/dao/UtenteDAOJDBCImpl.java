@@ -75,8 +75,9 @@ public class UtenteDAOJDBCImpl implements UtenteDAO {
 	}
 
 	@Override
-	public int checkRegistrazioneUtenza(Utente utente) {
-		String query = "SELECT COUNT(*) FROM utente WHERE uten_email = " + utente.getEmail() + " uten_password = " + utente.getPassword();
+	public int checkRegistrazioneUtenza(String email, String password) {
+		String query = "SELECT * FROM utente WHERE uten_mail = '" + email + "' AND uten_password = '" + password +"'";
+		System.out.println(query);
 
 		try {
 			Statement stmt = conn.createStatement();
