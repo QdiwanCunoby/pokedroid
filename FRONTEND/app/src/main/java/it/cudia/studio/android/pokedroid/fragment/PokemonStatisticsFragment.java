@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.loader.content.Loader;
 
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.github.mikephil.charting.data.RadarData;
 import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
@@ -39,6 +41,7 @@ import it.cudia.studio.android.pokedroid.R;
  */
 public class PokemonStatisticsFragment extends Fragment {
 
+    private static final String TAG = "PokemonStatisticsFragme";
     private RadarChart mChart;
     private Typeface mTfLight;
     private SparseIntArray factors = new SparseIntArray(7);
@@ -88,9 +91,38 @@ public class PokemonStatisticsFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
+
+
+    }
+
+
+    private String[] getXAxisValues()
+    {
+        String[] mFactors = new String[]{getString(factors.get(1)), getString(factors.get(2)),
+                getString(factors.get(3)), getString(factors.get(4)), getString(factors.get(5))
+                , getString(factors.get(6)), getString(factors.get(7))};
+
+
+        return mFactors;
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View v = inflater.inflate(R.layout.fragment_pokemon_statistics, container, false);;
+        factors.append(1, R.string.stat_forza);
+        factors.append(2, R.string.stat_velocita);
+        factors.append(3, R.string.stat_grinta);
+        factors.append(4, R.string.stat_fortuna);
+        factors.append(5, R.string.stat_difesa);
+        factors.append(6, R.string.stat_astuzia);
+        factors.append(7, R.string.stat_resistenza);
+        getActivity().getSupportFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+                Log.d(TAG, "onFragmentResult() called with: requestKey = [" + requestKey + "], bundle = [" + bundle + "]");
                 // We use a String here, but any type that can be put in a Bundle is supported.
                 forza = bundle.getInt("forza");
                 velocita = bundle.getInt("velocita");
@@ -100,50 +132,41 @@ public class PokemonStatisticsFragment extends Fragment {
                 astuzia = bundle.getInt("astuzia");
                 resistenza = bundle.getInt("resistenza");
                 // Do something with the result.
+                scores.append(1, forza);
+                scores.append(2, velocita);
+                scores.append(3, grinta);
+                scores.append(4, fortuna);
+                scores.append(5, difesa);
+                scores.append(6, astuzia);
+                scores.append(7, resistenza);
+                drawChart();
             }
         });
 
-        factors.append(1, R.string.stat_forza);
-        factors.append(2, R.string.stat_velocita);
-        factors.append(3, R.string.stat_grinta);
-        factors.append(4, R.string.stat_fortuna);
-        factors.append(5, R.string.stat_difesa);
-        factors.append(6, R.string.stat_astuzia);
-        factors.append(7, R.string.stat_resistenza);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View v = inflater.inflate(R.layout.fragment_pokemon_statistics, container, false);;
         mChart = (RadarChart) v.findViewById(R.id.radarChart);
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setXOffset(0f);
         xAxis.setYOffset(0f);
+        xAxis.setAxisMinimum(0f);
+        xAxis.setAxisMaximum(70f);
         xAxis.setTypeface(mTfLight);
-        xAxis.setTextSize(8f);
+        xAxis.setGranularity(10f); // interval 10
+        xAxis.setTextSize(18f);
+        xAxis.setTextColor(getResources().getColor(R.color.white));
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(getXAxisValues()));
 
-        xAxis.setValueFormatter(new ValueFormatter() {
-
-            private String[] mFactors = new String[]{getString(factors.get(1)), getString(factors.get(2)),
-                    getString(factors.get(3)), getString(factors.get(4)), getString(factors.get(5))};
-
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return mFactors[(int) value % mFactors.length];
-            }
-        });
 
         YAxis yAxis = mChart.getYAxis();
         yAxis.setAxisMinimum(0f);
-        yAxis.setAxisMaximum(50f);
+        yAxis.setAxisMaximum(70f);
         yAxis.setTypeface(mTfLight);
-        yAxis.setTextSize(9f);
+        yAxis.setTextSize(20f);
+        yAxis.setGranularity(10f); // interval 10
         yAxis.setLabelCount(5, false);
+        yAxis.setTextColor(getResources().getColor(R.color.white));
         yAxis.setDrawLabels(false);
+
 
         mChart.getLegend().setEnabled(false);
         mChart.getDescription().setEnabled(false);
@@ -159,15 +182,9 @@ public class PokemonStatisticsFragment extends Fragment {
         // }
 
         // Or hardcode some test data:
-        scores.append(1, forza);
-        scores.append(2, velocita);
-        scores.append(3, grinta);
-        scores.append(4, fortuna);
-        scores.append(5, difesa);
-        scores.append(6, astuzia);
-        scores.append(7, resistenza);
 
-        drawChart();
+
+
         return v;
     }
 
@@ -188,7 +205,8 @@ public class PokemonStatisticsFragment extends Fragment {
 
         RadarData data = new RadarData(dataSets);
         data.setValueTypeface(mTfLight);
-        data.setValueTextSize(8f);
+        data.setValueTextSize(15f);
+        data.setValueTextColor(getResources().getColor(R.color.white));
 
         data.setValueFormatter(new ValueFormatter() {
             @Override
