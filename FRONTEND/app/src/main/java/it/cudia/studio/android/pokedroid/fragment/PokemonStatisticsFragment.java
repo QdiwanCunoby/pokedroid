@@ -4,7 +4,9 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.loader.content.Loader;
 
 import android.util.SparseIntArray;
@@ -44,6 +46,7 @@ public class PokemonStatisticsFragment extends Fragment {
     private ArrayList<RadarEntry> entries = new ArrayList<>();
     private ArrayList<IRadarDataSet> dataSets = new ArrayList<>();
 
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -52,6 +55,8 @@ public class PokemonStatisticsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private int forza, velocita, grinta, difesa, fortuna, astuzia, resistenza;
 
     public PokemonStatisticsFragment() {
         // Required empty public constructor
@@ -82,6 +87,21 @@ public class PokemonStatisticsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+                // We use a String here, but any type that can be put in a Bundle is supported.
+                forza = bundle.getInt("forza");
+                velocita = bundle.getInt("velocita");
+                grinta = bundle.getInt("grinta");
+                difesa = bundle.getInt("difesa");
+                fortuna = bundle.getInt("fortuna");
+                astuzia = bundle.getInt("astuzia");
+                resistenza = bundle.getInt("resistenza");
+                // Do something with the result.
+            }
+        });
 
         factors.append(1, R.string.stat_forza);
         factors.append(2, R.string.stat_velocita);
@@ -139,13 +159,13 @@ public class PokemonStatisticsFragment extends Fragment {
         // }
 
         // Or hardcode some test data:
-        scores.append(1, 18);
-        scores.append(2, 26);
-        scores.append(3, 35);
-        scores.append(4, 40);
-        scores.append(5, 48);
-        scores.append(6, 48);
-        scores.append(7, 48);
+        scores.append(1, forza);
+        scores.append(2, velocita);
+        scores.append(3, grinta);
+        scores.append(4, fortuna);
+        scores.append(5, difesa);
+        scores.append(6, astuzia);
+        scores.append(7, resistenza);
 
         drawChart();
         return v;

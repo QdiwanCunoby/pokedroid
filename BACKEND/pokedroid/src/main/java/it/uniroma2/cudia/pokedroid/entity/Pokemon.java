@@ -8,6 +8,7 @@ import org.json.JSONObject;
 public class Pokemon {
 	
 	private long idPokemon;
+	private String nome;
 	private int tipo;
 	private int forza;
 	private int grinta;
@@ -18,10 +19,11 @@ public class Pokemon {
 	private int velocita;
 	private String codiceAttivazione;
 	
-	public Pokemon(long idPokemon, int tipo, int forza, int grinta, int fortuna, int difesa, int astuzia,
+	public Pokemon(long idPokemon,String nome, int tipo, int forza, int grinta, int fortuna, int difesa, int astuzia,
 			int resistenza, int velocita,String codiceAttivazione) {
 		super();
 		this.idPokemon = idPokemon;
+		this.setNome(nome);
 		this.tipo = tipo;
 		this.forza = forza;
 		this.grinta = grinta;
@@ -148,13 +150,14 @@ public class Pokemon {
 	public static Pokemon fromJSON(String jsonString) throws JSONException {
 		JSONObject jsonObject = new JSONObject(jsonString);
 
-		if(!jsonObject.has("idPokemon") || !jsonObject.has("tipo") || !jsonObject.has("forza") 
+		if(!jsonObject.has("idPokemon") || !jsonObject.has("nome") || !jsonObject.has("tipo") || !jsonObject.has("forza") 
 		   || !jsonObject.has("grinta") || !jsonObject.has("fortuna") || !jsonObject.has("difesa")
 		   || !jsonObject.has("astuzia") || !jsonObject.has("resistenza") || !jsonObject.has("velocita")
 		   || !jsonObject.has("codiceAttivazione"))  
 			throw new JSONException("Where are the idTipo or tipo?");
 		
 		long idPokemon = jsonObject.getLong("idPokemon");
+		String nome = jsonObject.getString("nome");
 		int tipo = jsonObject.getInt("tipo");
 		int forza = jsonObject.getInt("forza");
 		int difesa = jsonObject.getInt("difesa");
@@ -165,12 +168,20 @@ public class Pokemon {
 		int velocita = jsonObject.getInt("velocita");
 		String codiceAttivazione = jsonObject.getString("codiceAttivazione");
 
-		return new Pokemon(idPokemon,tipo,forza,grinta,fortuna,difesa,astuzia,
+		return new Pokemon(idPokemon,nome,tipo,forza,grinta,fortuna,difesa,astuzia,
 				resistenza,velocita,codiceAttivazione);
 	}
 
 	public String toJsonString() {
 		return new JSONObject(this).toString();	
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 

@@ -5,4 +5,20 @@
     <color name="color_card">#CCC1C1</color>
     <color name="input_background">#FFFEFEFE</color>
     <color name="button_red">#C50303</color>
+    <color name="type_normale">#9199a1</color>
+    <color name="type_lotta">#cd406a</color>
+    <color name="type_volante">#8ea8de</color>
+    <color name="type_veleno">#a96ac8</color>\
+    <color name="type_terra">#d87844</color>
+    <color name="type_roccia">#c5b78b</color>
+    <color name="type_coleottero">#91c02e</color>
+    <color name="type_spettro">#5269ac</color>
+    <color name="type_fuoco">#fe9c54</color>
+    <color name="type_acqua">#4f90d5</color>
+    <color name="type_erba">#62bb5a</color>
+    <color name="type_elettro">#f4d23c</color>
+    <color name="type_spico">#f67177</color>
+    <color name="type_chiaccio">#73cebf</color>
+    <color name="type_drago">#0a6dc2</color>
+    <color name="questionmark">#3E453A</color>
 </resources>
