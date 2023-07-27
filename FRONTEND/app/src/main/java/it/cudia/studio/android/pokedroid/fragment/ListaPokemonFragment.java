@@ -140,6 +140,7 @@ public class ListaPokemonFragment extends Fragment {
                             while(j < response.length()){
                                 JSONObject jsonObject = (JSONObject) response.opt(j);
                                 try {
+                                    data.remove((int)jsonObject.getLong("idPokemon")-1);
                                     data.add((int)jsonObject.getLong("idPokemon")-1,new Pokemon(
                                             jsonObject.getLong("idPokemon"),
                                             jsonObject.getString("nome"),

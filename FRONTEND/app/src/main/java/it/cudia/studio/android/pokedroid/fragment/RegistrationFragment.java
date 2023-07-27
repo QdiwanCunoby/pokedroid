@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
 import it.cudia.studio.android.pokedroid.request.BooleanRequest;
+import it.cudia.studio.android.pokedroid.singleton.LocalDB;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 import it.cudia.studio.android.pokedroid.singleton.SingletonVolley;
 
@@ -85,6 +86,8 @@ public class RegistrationFragment extends Fragment {
         // Get a RequestQueue
         RequestQueue queue = SingletonVolley.getInstance(getActivity().getApplicationContext()).
                 getRequestQueue();
+
+        LocalDB localDB = LocalDB.getInstance(getActivity().getApplicationContext());
 
     }
 
