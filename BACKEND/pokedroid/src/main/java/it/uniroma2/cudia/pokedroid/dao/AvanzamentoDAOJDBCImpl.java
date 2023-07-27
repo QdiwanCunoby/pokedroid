@@ -8,13 +8,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
-import it.uniroma2.cudia.pokedroid.entity.Utenza;
-
-public class UtenzaDAOJDBCImpl implements UtenzaDAO {
+public class AvanzamentoDAOJDBCImpl implements  AvanzamentoDAO{
 	
 private Connection conn;
 	
-	public UtenzaDAOJDBCImpl(String ip, String port, String dbName, String userName, String pwd) {
+	public AvanzamentoDAOJDBCImpl(String ip, String port, String dbName, String userName, String pwd) {
 		
 		try {
 			
@@ -27,60 +25,36 @@ private Connection conn;
 		}
 	}
 	
+
 	@Override
-	public int checkUtenza(Utenza utenza) throws SQLException {
-		String SQL_SELECT = "SELECT * FROM utenza WHERE utente_id=" + utenza.getUserId() +"user_id="+ utenza.getUserId();
-		ResultSet affectedRows = null;
+	public int countPokemon(long pokedexId) throws SQLException {
+		
+		String SQL_COUNT = "SELECT COUNT(*) FROM avanzamento AS a WHERE a.pokedex_id = "+pokedexId;
 		conn.setAutoCommit(false);
+		int numeroPokemon = -1;
 		
 		try {
+			ResultSet affectedRows = null;
 			
-			PreparedStatement pstmt = conn.prepareStatement(SQL_SELECT);
+			PreparedStatement pstmt = conn.prepareStatement(SQL_COUNT);
 			affectedRows = pstmt.executeQuery();
 			
-			if(!affectedRows.first()) {
-				
+			if(affectedRows.next()) {
+				numeroPokemon = affectedRows.getInt(1);
 			}
-
 		} catch (SQLException e) {
-		
-			conn.rollback();
-			e.printStackTrace();
-			return -1;
-		
-		}
-		conn.commit();
-		
-		return 1;
-	}
-
-	@Override
-	public int createUtenza(Utenza utenza) throws SQLException {
-		String SQL_INSERT = "INSERT INTO utenza(uten_id,user_id) " + "VALUES(?,?)";
-		int affectedRows = 0;
-		conn.setAutoCommit(false);
-		
-		try {
 			
-			PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT);
-			pstmt.setLong(1, utenza.getUtenteId());
-			pstmt.setLong(2, utenza.getUserId());
-			affectedRows = pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-		
 			conn.rollback();
 			e.printStackTrace();
 			return -1;
-		
-		}
-		
-		conn.commit();
+		}	
 	
-		return affectedRows;
+	
+		conn.commit();
+		return numeroPokemon;
 	}
 
-	@Override
+	
 	public void closeConnection() {
 		try {
 			conn.close();
@@ -98,5 +72,7 @@ private Connection conn;
 			e.printStackTrace();
 		}
 	}
+
+
 
 }

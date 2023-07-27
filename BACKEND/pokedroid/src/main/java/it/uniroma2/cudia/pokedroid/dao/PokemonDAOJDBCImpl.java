@@ -86,6 +86,20 @@ public class PokemonDAOJDBCImpl implements PokemonDAO {
 		conn.commit();
 		return listaPokemon;
 	}
+	
+	@Override
+	public void riscattaPokemon(long pokemon_id,long pokedex_id) throws SQLException {
+		String SQL_INSERT ="INSERT INTO avanzamento(pokemon_id,pokedex_id) VALUES("+pokemon_id+","+pokedex_id+")";
+		conn.setAutoCommit(false);
+		
+		PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT);
+		
+		pstmt.executeUpdate();
+		
+		conn.commit();
+		return;
+		
+	}
 
 	@Override
 	public void closeConnection() {
@@ -105,5 +119,4 @@ public class PokemonDAOJDBCImpl implements PokemonDAO {
 			e.printStackTrace();
 		}
 	}
-
 }

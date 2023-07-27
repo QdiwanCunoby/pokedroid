@@ -131,51 +131,32 @@ public class ListaPokemonFragment extends Fragment {
 
                             for(int i=0; i<=150; i++){
 
-                                    if(response.opt(i) != null){
-                                        try {
-                                            JSONObject jsonObject = (JSONObject) response.get(i);
-
-                                            if((int)jsonObject.getLong("idPokemon") != i+1){
-                                                Log.d(TAG, "no pokemon");
-                                                while((int)jsonObject.getLong("idPokemon") != i+1){
-                                                    Log.d(TAG, new Pokemon(i+1).toString());
-                                                    data.add(new Pokemon(i+1));
-                                                    i=i+1;
-                                                }
-                                            }
-
-                                            data.add(new Pokemon(
-                                                    jsonObject.getLong("idPokemon"),
-                                                    jsonObject.getString("nome"),
-                                                    jsonObject.getInt("tipo"),
-                                                    jsonObject.getInt("forza"),
-                                                    jsonObject.getInt("grinta"),
-                                                    jsonObject.getInt("fortuna"),
-                                                    jsonObject.getInt("difesa"),
-                                                    jsonObject.getInt("astuzia"),
-                                                    jsonObject.getInt("resistenza"),
-                                                    jsonObject.getInt("velocita")));
-
-                                            Log.d(TAG, new Pokemon(
-                                                            jsonObject.getLong("idPokemon"),
-                                                    jsonObject.getString("nome"),
-                                                    jsonObject.getInt("tipo"),
-                                                    jsonObject.getInt("forza"),
-                                                    jsonObject.getInt("grinta"),
-                                                    jsonObject.getInt("fortuna"),
-                                                    jsonObject.getInt("difesa"),
-                                                    jsonObject.getInt("astuzia"),
-                                                    jsonObject.getInt("resistenza"),
-                                                    jsonObject.getInt("velocita")).toString());
-                                        } catch (JSONException e) {
-                                            throw new RuntimeException(e);
-                                        }
-                                    }else {
-                                        Log.d(TAG, new Pokemon(i+1).toString());
-                                        data.add(new Pokemon(i+1));
-                                    }
-
+                                Log.d(TAG, new Pokemon(i+1).toString());
+                                data.add(new Pokemon(i+1));
                             }
+
+                            int j = 0;
+
+                            while(j < response.length()){
+                                JSONObject jsonObject = (JSONObject) response.opt(j);
+                                try {
+                                    data.add((int)jsonObject.getLong("idPokemon")-1,new Pokemon(
+                                            jsonObject.getLong("idPokemon"),
+                                            jsonObject.getString("nome"),
+                                            jsonObject.getInt("tipo"),
+                                            jsonObject.getInt("forza"),
+                                            jsonObject.getInt("grinta"),
+                                            jsonObject.getInt("fortuna"),
+                                            jsonObject.getInt("difesa"),
+                                            jsonObject.getInt("astuzia"),
+                                            jsonObject.getInt("resistenza"),
+                                            jsonObject.getInt("velocita")));
+                                } catch (JSONException ex) {
+                                    throw new RuntimeException(ex);
+                                }
+                                j++;
+                            }
+
                             PokeCardRecyclerViewAdapter adapter = new PokeCardRecyclerViewAdapter(getContext(),data);
                             try {
                                 Log.d(TAG, "onResponse() called with: response = [" + response + "]" + " "+response.get(0));

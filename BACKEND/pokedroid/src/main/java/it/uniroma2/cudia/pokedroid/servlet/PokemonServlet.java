@@ -74,7 +74,22 @@ public class PokemonServlet extends HttpServlet {
 			return;
 		}
 		
-		response.getWriter().append(listaPokemon.toJSONString());
+		
+		out.append(listaPokemon.toJSONString());
+		
+		return;
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		System.out.println("PokemonServlet. Invoking a doPost method.");
+		
+		try {
+			daoPokemon.riscattaPokemon(7,22);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return;
 	}

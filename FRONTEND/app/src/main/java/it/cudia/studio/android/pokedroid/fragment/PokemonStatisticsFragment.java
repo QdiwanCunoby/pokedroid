@@ -8,10 +8,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.loader.content.Loader;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -33,6 +37,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import java.util.ArrayList;
 
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -91,8 +96,7 @@ public class PokemonStatisticsFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
-
+        setHasOptionsMenu(true);
     }
 
 
@@ -218,5 +222,19 @@ public class PokemonStatisticsFragment extends Fragment {
 
         mChart.setData(data);
         mChart.invalidate();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){
+        super.onCreateOptionsMenu(menu,menuInflater);
+
+        PokedroidToolbar.enableBackNavigation();
+        menu.findItem(R.id.menu_profile).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                NavHostFragment.findNavController(PokemonStatisticsFragment.this).navigate(R.id.action_pokemonStatisticsFragment_to_profileFragment);
+                return true;
+            }
+        });
     }
 }
