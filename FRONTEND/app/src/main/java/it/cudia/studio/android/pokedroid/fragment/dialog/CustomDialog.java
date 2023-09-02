@@ -1,5 +1,7 @@
 package it.cudia.studio.android.pokedroid.fragment.dialog;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.activity.AccessActivity;
+import it.cudia.studio.android.pokedroid.activity.MainActivity;
+import it.cudia.studio.android.pokedroid.model.AppDatabase;
 
 public class CustomDialog extends DialogFragment {
     private static final String TAG = "CustomDialog";
@@ -31,6 +36,8 @@ public class CustomDialog extends DialogFragment {
         labelIcon = view.findViewById(R.id.ivIconDialog);
         content = view.findViewById(R.id.tvContentDiaolog);
         label = view.findViewById(R.id.tvTitleDialog);
+        Dialog d = getDialog();
+        d.setCanceledOnTouchOutside(false);
 
         if(typeDialog == type_dialog.WRONG){
             labelIcon.setImageResource(R.drawable.zubat_icon);
@@ -44,13 +51,28 @@ public class CustomDialog extends DialogFragment {
             labelIcon.setImageResource(R.drawable.meowth_icon);
             label.setText("Warning");
             content.setText(contenutoDialog);
+        } else if(typeDialog == type_dialog.LOGOUT){
+            labelIcon.setImageResource(R.drawable.meowth_icon);
+            label.setText("Warning");
+            content.setText(contenutoDialog);
         }
 
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick! ok close dialog");
-                getDialog().dismiss();
+                if(typeDialog == type_dialog.RIGHT){
+                    Intent intent = new Intent(view.getContext(), MainActivity.class);
+                    startActivity(intent);
+                }else if(typeDialog == type_dialog.LOGOUT){
+                    Thread t = new Thread(new DeleteUserSqlLiteRunnable());
+                    t.start();
+                    Intent intent  =  new Intent(getActivity(), AccessActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    Log.d(TAG, "onClick! ok close dialog");
+                    getDialog().dismiss();
+                }
             }
         });
 
@@ -72,10 +94,29 @@ public class CustomDialog extends DialogFragment {
         typeDialog = type_dialog.WARNING;
         this.contenutoDialog = contenutoDialog;
     }
+
+    public void setDialogLogout(String contenutoDialog){
+        typeDialog = type_dialog.LOGOUT;
+        this.contenutoDialog = contenutoDialog;
+    }
+
+    public class DeleteUserSqlLiteRunnable implements Runnable{
+        public DeleteUserSqlLiteRunnable() {
+
+        }
+
+        public void run() {
+            AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
+
+            db.userDao().deleteById(1);
+
+        }
+    }
 }
 
 enum type_dialog{
     WRONG,
     RIGHT,
-    WARNING
+    WARNING,
+    LOGOUT
 }

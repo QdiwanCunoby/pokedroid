@@ -4,8 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.room.Room;
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,12 +24,13 @@ import java.util.logging.LogManager;
 
 import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.fragment.RegistrationFragment;
+import it.cudia.studio.android.pokedroid.model.AppDatabase;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     PokedroidToolbar pokedroidToolbar;
-    TextView tvAccedi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
 
         pokedroidToolbar.setActionBar(Objects.requireNonNull(getSupportActionBar()));
         PokedroidToolbar.setInflater(getMenuInflater());
+
+        Thread t = new Thread(new MyRunnable());
+        t.start();
+
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -45,4 +56,23 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+    public class MyRunnable implements Runnable {
+
+        public MyRunnable() {
+
+        }
+
+        public void run() {
+
+            AppDatabase db = AppDatabase.getInstance(MainActivity.this);
+
+
+                Log.d(TAG, "run() called");
+
+                db.userDao().getAll();
+
+        }
+    }
 }
+

@@ -12,13 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 
-import dto.RegistrationRequest;
 import it.uniroma2.cudia.pokedroid.dao.PokedexDAOJDBCImpl;
 import it.uniroma2.cudia.pokedroid.dao.PokemonDAO;
 import it.uniroma2.cudia.pokedroid.dao.PokemonDAOJDBCImpl;
 import it.uniroma2.cudia.pokedroid.dao.UserDAOJDBCImpl;
 import it.uniroma2.cudia.pokedroid.dao.UtenteDAOJDBCImpl;
 import it.uniroma2.cudia.pokedroid.dao.UtenzaDAOJDBCImpl;
+import it.uniroma2.cudia.pokedroid.dto.RegistrationRequest;
 import it.uniroma2.cudia.pokedroid.entity.ListaPokemon;
 
 public class PokemonServlet extends HttpServlet {

@@ -29,7 +29,7 @@ public class UtenteDAOJDBCImpl implements UtenteDAO {
 	}
 
 	@Override
-	public int createUtente(Utente utente) throws SQLException {
+	public Utente createUtente(Utente utente) throws SQLException {
 		String SQL_INSERT = "INSERT INTO utente(uten_mail,uten_password) " + "VALUES(?,?)";
 		String SQL_TAKE_ID = "SELECT LAST_INSERT_ID()";
 		int affectedRows = 0;
@@ -47,7 +47,7 @@ public class UtenteDAOJDBCImpl implements UtenteDAO {
 		
 			conn.rollback();
 			e.printStackTrace();
-			return -1;
+			return null;
 		
 		}
 		
@@ -60,7 +60,7 @@ public class UtenteDAOJDBCImpl implements UtenteDAO {
 
 			conn.rollback();
 			e.printStackTrace();
-			return -1;
+			return null;
 		
 		}
 		
@@ -68,10 +68,10 @@ public class UtenteDAOJDBCImpl implements UtenteDAO {
 		
 		if(resultSetId.next()) {
 			System.out.println("last id in utente table insert is : " + resultSetId.getInt(1));
-			return resultSetId.getInt(1);
+			return  new Utente(resultSetId.getInt(1),utente.getEmail(),utente.getPassword());
 		}
 
-		return -1;
+		return null;
 	}
 
 	@Override

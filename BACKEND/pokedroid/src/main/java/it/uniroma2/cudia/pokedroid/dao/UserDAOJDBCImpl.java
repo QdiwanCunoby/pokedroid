@@ -28,7 +28,7 @@ public class UserDAOJDBCImpl implements UserDAO {
 	}
 
 	@Override
-	public int createUser(User user) throws SQLException {
+	public User createUser(User user) throws SQLException {
 		String SQL_INSERT = "INSERT INTO user(user_username,user_genere,user_id_pokedex,user_codice_amico) " + "VALUES(?,?,?,?)";
 		String SQL_TAKE_ID = "SELECT LAST_INSERT_ID()";
 		int affectedRows = 0;
@@ -48,7 +48,7 @@ public class UserDAOJDBCImpl implements UserDAO {
 			
 			conn.rollback();
 			e.printStackTrace();
-			return -1;
+			return null;
 			
 		}
 		
@@ -61,7 +61,7 @@ public class UserDAOJDBCImpl implements UserDAO {
 
 			conn.rollback();
 			e.printStackTrace();
-			return -1;
+			return null;
 		
 		}
 		
@@ -69,10 +69,10 @@ public class UserDAOJDBCImpl implements UserDAO {
 		
 		if(resultSetId.next()) {
 			System.out.println("last id in user table insert is : " + resultSetId.getInt(1));
-			return resultSetId.getInt(1);
+			return new User((long)resultSetId.getInt(1),user.getUsername(),user.isGenere(),user.getIdPokedex(),user.getCodiceAmico());
 		}
 
-		return -1;
+		return null;
 	}
 	
 	public void closeConnection() {

@@ -1,5 +1,6 @@
 package it.cudia.studio.android.pokedroid.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -21,6 +22,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.activity.AccessActivity;
+import it.cudia.studio.android.pokedroid.activity.MainActivity;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
 import it.cudia.studio.android.pokedroid.request.BooleanRequest;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
@@ -100,6 +103,7 @@ public class LoginFragment extends Fragment {
 
         Button btAccedi = v.findViewById(R.id.btListaAmici);
         CustomDialog dialog = new CustomDialog();
+        //dialog.SetCanceledOnTouchOutside(true);
 
 
         btAccedi.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +128,8 @@ public class LoginFragment extends Fragment {
                                 if(response){
                                     dialog.setDialogRight("Loggin effettuato correttamente");
                                     dialog.show(getFragmentManager(),"CustomDialog");
-                                    NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_listaPokemonFragment);
+
+                                    //NavHostFragment.findNavController(LoginFragment.this).navigate(R.id.action_loginFragment_to_listaPokemonFragment);
                                 }else {
                                     dialog.setDialogWarning("Loggin effettuato non corretto");
                                     dialog.show(getFragmentManager(),"CustomDialog");

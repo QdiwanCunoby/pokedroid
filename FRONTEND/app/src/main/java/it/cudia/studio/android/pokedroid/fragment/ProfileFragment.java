@@ -1,5 +1,6 @@
 package it.cudia.studio.android.pokedroid.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,8 +13,12 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.activity.AccessActivity;
+import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
+import it.cudia.studio.android.pokedroid.model.AppDatabase;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 
 /**
@@ -31,6 +36,9 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    TextView logout;
+    CustomDialog dialog;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -73,6 +81,18 @@ public class ProfileFragment extends Fragment {
 
         Button changePassword = view.findViewById(R.id.btCambioPassword);
 
+        logout = view.findViewById(R.id.tvLogout);
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog = new CustomDialog();
+                dialog.setDialogLogout("Sei sicuro di voler uscire dal tuo profilo?");
+                dialog.show(getFragmentManager(),"CustomDialog");
+            }
+        });
+
         changePassword.setOnClickListener( new View.OnClickListener(){
 
             @Override
@@ -102,4 +122,6 @@ public class ProfileFragment extends Fragment {
         PokedroidToolbar.enableBackNavigation();
         PokedroidToolbar.disableProfileIcon();
     }
+
+
 }

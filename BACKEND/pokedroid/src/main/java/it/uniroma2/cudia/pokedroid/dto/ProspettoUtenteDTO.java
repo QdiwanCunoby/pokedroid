@@ -1,30 +1,27 @@
-package dto;
-
-import java.util.Objects;
+package it.uniroma2.cudia.pokedroid.dto;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import it.uniroma2.cudia.pokedroid.entity.Pokedex;
 import it.uniroma2.cudia.pokedroid.entity.User;
 import it.uniroma2.cudia.pokedroid.entity.Utente;
 
-public class RegistrationRequest {
+public class ProspettoUtenteDTO {
 	
 	private User user;
 	private Utente utente;
+	private Pokedex pokedex;
 	
-	public RegistrationRequest() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 	
-	public RegistrationRequest(User user,Utente utente) {
+	
+	public ProspettoUtenteDTO(User user, Utente utente, Pokedex pokedex) {
 		super();
 		this.user = user;
 		this.utente = utente;
-		// TODO Auto-generated constructor stub
+		this.pokedex = pokedex;
 	}
-	
+
 	public User getUser() {
 		return user;
 	}
@@ -35,32 +32,21 @@ public class RegistrationRequest {
 		return utente;
 	}
 	public void setUtente(Utente utente) {
-		utente = utente;
+		this.utente = utente;
 	}
-
-	@Override
-	public String toString() {
-		return "RegistrationRequest [user=" + user + ", Utente=" + utente + "]";
+	public Pokedex getPokedex() {
+		return pokedex;
 	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(utente, user);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		RegistrationRequest other = (RegistrationRequest) obj;
-		return Objects.equals(utente, other.utente) && Objects.equals(user, other.user);
+	public void setPokedex(Pokedex pokedex) {
+		this.pokedex = pokedex;
 	}
 	
-	public static RegistrationRequest fromJSON(String jsonString) throws JSONException {
+	@Override
+	public String toString() {
+		return "ProspettoUtenteDTO [user=" + user + ", utente=" + utente + ", pokedex=" + pokedex + "]";
+	}
+	
+	/*public static ProspettoUtenteDTO fromJSON(String jsonString) throws JSONException {
 		JSONObject jsonObject = new JSONObject(jsonString);
 
 		if(!jsonObject.has("user") || !jsonObject.has("utente"))  
@@ -84,8 +70,8 @@ public class RegistrationRequest {
 		
 		Utente utente =  new Utente(idUtente,email,password);
 		
-		return new RegistrationRequest(user,utente);
-	}
+		return new ProspettoUtenteDTO(user,utente);
+	}*/
 
 	public String toJsonString() {
 		return new JSONObject(this).toString();	

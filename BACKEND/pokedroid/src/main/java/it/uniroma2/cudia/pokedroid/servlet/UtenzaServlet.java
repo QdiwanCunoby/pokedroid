@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 
-import dto.RegistrationRequest;
 import it.uniroma2.cudia.pokedroid.dao.PokedexDAO;
 import it.uniroma2.cudia.pokedroid.dao.PokedexDAOJDBCImpl;
 import it.uniroma2.cudia.pokedroid.dao.UserDAO;
@@ -21,8 +20,12 @@ import it.uniroma2.cudia.pokedroid.dao.UtenteDAO;
 import it.uniroma2.cudia.pokedroid.dao.UtenteDAOJDBCImpl;
 import it.uniroma2.cudia.pokedroid.dao.UtenzaDAO;
 import it.uniroma2.cudia.pokedroid.dao.UtenzaDAOJDBCImpl;
+import it.uniroma2.cudia.pokedroid.dto.ProspettoUtenteDTO;
+import it.uniroma2.cudia.pokedroid.dto.RegistrationRequest;
+import it.uniroma2.cudia.pokedroid.entity.User;
 import it.uniroma2.cudia.pokedroid.entity.Utente;
 import it.uniroma2.cudia.pokedroid.entity.Utenza;
+import it.uniroma2.cudia.pokedroid.entity.Pokedex;
 
 public class UtenzaServlet extends HttpServlet {
 
@@ -99,13 +102,20 @@ public class UtenzaServlet extends HttpServlet {
 		try {
 			
 			
+			Pokedex pokedex = new Pokedex(daoPokedex.createPokedex(),0);
+			registrationRequest.getUser().setIdPokedex(pokedex.getIdPokedex());
+			User user = daoUser.createUser(registrationRequest.getUser());
+			Utente utente = daoUtente.createUtente(registrationRequest.getUtente());
 			
-			registrationRequest.getUser().setIdPokedex(daoPokedex.createPokedex());
-			if(daoUtenza.createUtenza(new Utenza((long)(daoUtente.createUtente(registrationRequest.getUtente())),(long)(daoUser.createUser(registrationRequest.getUser())))) == -1) {
+			if(daoUtenza.createUtenza(new Utenza(utente.getIdUtente(),user.getIdUser())) == -1) {
+				
+			
+				
 				response.getWriter().append("false");
 			}
 			else {
-				response.getWriter().append("true");
+				ProspettoUtenteDTO prospettoUtente = new ProspettoUtenteDTO(user,utente,pokedex);
+				response.getWriter().append(prospettoUtente.toJsonString());
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
