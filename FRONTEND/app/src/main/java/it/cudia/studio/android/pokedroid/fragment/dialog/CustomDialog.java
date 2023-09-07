@@ -66,8 +66,7 @@ public class CustomDialog extends DialogFragment {
                 }else if(typeDialog == type_dialog.LOGOUT){
                     Thread t = new Thread(new DeleteUserSqlLiteRunnable());
                     t.start();
-                    Intent intent  =  new Intent(getActivity(), AccessActivity.class);
-                    startActivity(intent);
+
                 }
                 else{
                     Log.d(TAG, "onClick! ok close dialog");
@@ -98,6 +97,7 @@ public class CustomDialog extends DialogFragment {
     public void setDialogLogout(String contenutoDialog){
         typeDialog = type_dialog.LOGOUT;
         this.contenutoDialog = contenutoDialog;
+
     }
 
     public class DeleteUserSqlLiteRunnable implements Runnable{
@@ -109,7 +109,8 @@ public class CustomDialog extends DialogFragment {
             AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
 
             db.userDao().deleteById(1);
-
+            Intent intent  =  new Intent(getActivity(), AccessActivity.class);
+            startActivity(intent);
         }
     }
 }

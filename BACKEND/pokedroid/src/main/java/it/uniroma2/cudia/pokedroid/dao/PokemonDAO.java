@@ -10,5 +10,7 @@ public interface PokemonDAO {
 	
 	public void closeConnection(); 
 	
-	public void riscattaPokemon(long pokemon_id,long pokedex_id) throws SQLException;
+	public long checkCodiceRiscattoPokemon(String codiceRiscattoPokemon) throws SQLException;
+	
+	public int riscattaPokemon(long pokemon_id,long pokedex_id) throws SQLException;
 }

@@ -1,16 +1,12 @@
 package it.cudia.studio.android.pokedroid.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,14 +26,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import it.cudia.studio.android.pokedroid.R;
-import it.cudia.studio.android.pokedroid.activity.AccessActivity;
-import it.cudia.studio.android.pokedroid.activity.MainActivity;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
 import it.cudia.studio.android.pokedroid.model.AppDatabase;
 import it.cudia.studio.android.pokedroid.model.entity.User;
-import it.cudia.studio.android.pokedroid.request.BooleanRequest;
-import it.cudia.studio.android.pokedroid.singleton.LocalDB;
-import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 import it.cudia.studio.android.pokedroid.singleton.SingletonVolley;
 
 /**
@@ -57,18 +48,14 @@ public class RegistrationFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     EditText email;
     EditText confermaEmail;
     EditText password;
     EditText confermaPassword;
     EditText username;
     RadioGroup genere;
-
     Switch saveRegistration;
     boolean saveDataRegistation = false;
-
-
 
     public RegistrationFragment() {
         // Required empty public constructor
@@ -94,27 +81,26 @@ public class RegistrationFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate() called with: savedInstanceState = [" + savedInstanceState + "]");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        /*Set activated OptionMenu in a tool bar*/
         setHasOptionsMenu(true);
 
-        // Get a RequestQueue
+
+        // Get instance of a RequestQueue from a Singleton
         RequestQueue queue = SingletonVolley.getInstance(getActivity().getApplicationContext()).
                 getRequestQueue();
-
-        //LocalDB localDB = LocalDB.getInstance(getActivity().getApplicationContext());
-
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView() called with: inflater = [" + inflater + "], container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_registration, container, false);
 
@@ -126,11 +112,12 @@ public class RegistrationFragment extends Fragment {
          genere = v.findViewById(R.id.genere);
          saveRegistration = (Switch) v.findViewById(R.id.swMantieniAccessoReg);
 
-         Thread t = new Thread(new MyRunnable2());
+         Thread t = new Thread(new CeckLocalDBRunnable());
 
         saveRegistration.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d(TAG, "onCheckedChanged() called with: buttonView = [" + buttonView + "], isChecked = [" + isChecked + "]");
                 if(isChecked){
                     saveDataRegistation = true;
                 }else{
@@ -143,29 +130,34 @@ public class RegistrationFragment extends Fragment {
         tvAccedi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "onClick() called with: v = [" + v + "]");
                 NavHostFragment.findNavController(RegistrationFragment.this).navigate(R.id.action_registrationFragment_to_loginFragment);
             }
         });
 
-        Button btRegistrati = v.findViewById(R.id.btListaAmici);
-        CustomDialog dialog = new CustomDialog();
+        Button btRegistrati = v.findViewById(R.id.btRiscattaPokemon);
+        CustomDialog dialog = new CustomDialog();// custom dialog is a extends of DialogFragment to have a dialog with custom look :)
 
         btRegistrati.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick() called with: v = [" + v + "]");
-
+                /*check if the value in conferm email field is the same in email field*/
                 if(!email.getText().toString().equals(confermaEmail.getText().toString())){
                     Log.d(TAG, "email "+email.getText().toString()+"conferma email "+confermaEmail.getText().toString());
-                    dialog.setDialogWrong("Emaikl e conferma email non combaciano");
+                    dialog.setDialogWrong("Email e conferma email non combaciano");
                     dialog.show(getFragmentManager(),"CustomDialog");
                     return;
-                }else if (!password.getText().toString().equals(confermaPassword.getText().toString())){
+                }
+                /*check if the value in conferm password field is the same in password field*/
+                else if (!password.getText().toString().equals(confermaPassword.getText().toString())){
                     Log.d(TAG, "password "+password.getText().toString()+" conferma password"+confermaPassword.getText().toString());
                     dialog.setDialogWrong("Password e conferma password non combaciano");
                     dialog.show(getFragmentManager(),"CustomDialog");
                     return;
-                }else if(email.getText().toString().equals("") ||
+                }
+                /*check if some field is empty and if is minimun one is empty trigger the customdialog to show the warning message*/
+                else if(email.getText().toString().equals("") ||
                         confermaEmail.getText().toString().equals("") ||
                         password.getText().toString().equals("") ||
                         confermaPassword.getText().toString().equals("") ||
@@ -178,17 +170,18 @@ public class RegistrationFragment extends Fragment {
                         return;
                 }
 
+                //prepare json to make request of registration at the backe-end
                 String json_string = "{\n" +
                         "    user:{\n" +
-                        "        idUser : 0,\n" +
+                        "        idUser : 0,\n" + // idUser is 0 beacuse is the back-end logic to decide the id
                         "        username :"+ username.getText() +",\n" +
-                        "        genere : true,\n" +
-                        "        idPokedex : 0,\n" +
-                        "        codiceAmico : \"amico\"\n" +
+                        "        genere : true,\n" + //TO DO : TAKE VALUE FROM FORM REGISTRATION USER
+                        "        idPokedex : 0,\n" + // idPokedex is 0 beacuse is the back-end logic to decide the id
+                        "        codiceAmico : \"amico\"\n" + //TO DO : MAKE GENERATED FRIEND CODE
                         "    }\n" +
                         "    ,\n" +
                         "    utente:{\n" +
-                        "        idUtente : 0,\n" +
+                        "        idUtente : 0,\n" + // idUtente is 0 beacuse is the back-end logic to decide the id
                         "        email : "+ email.getText() +",\n" +
                         "        password : "+ password.getText() +"\n" +
                         "    }\n" +
@@ -196,27 +189,28 @@ public class RegistrationFragment extends Fragment {
 
                 JSONObject jsonObject;
                 try {
-                    jsonObject = new JSONObject(json_string);
+                    jsonObject = new JSONObject(json_string); // make a json string in a json object
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
 
-                //NavHostFragment.findNavController(RegistrationFragment.this).navigate(R.id.action_registrationFragment_to_listaPokemonFragment);
                 String url = getResources().getString(R.string.base_url)+"UtenzaServlet";
+                /*prepare request to do at back-end, this ios a POST*/
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                         (Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-
                                     Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-                                    if(response != null){
+                                    if(response != null){// if response is OK attivate dialog to comunicate user the right bheaviour
                                         dialog.setDialogRight("Account reggistrato correttamente");
                                         dialog.show(getFragmentManager(),"CustomDialog");
                                     }
+                                    /*IN THIS IF AND ELSE CODE BLOCK, THERE IS A CHECK ABOUT THE USER ACTIVATION
+                                    OF THE OPTION TO REMAIN AUTHENTICATE WHEN CLOSE APP AND RESTART IN A SECOND MOMENT*/
                                     if(saveDataRegistation){
                                         Thread t = null;
                                         try {
-                                            t = new Thread(new MyRunnable(new User(1,
+                                            t = new Thread(new SaveUserDataLocalDBRunnable(new User(1,
                                                     response.getJSONObject("user").getString("username"),
                                                     response.getJSONObject("utente").getString("email"),
                                                     response.getJSONObject("utente").getString("password"),
@@ -233,7 +227,7 @@ public class RegistrationFragment extends Fragment {
                                         Thread t = null;
                                         try {
 
-                                            t = new Thread(new MyRunnable(new User(1,
+                                            t = new Thread(new SaveUserDataLocalDBRunnable(new User(1,
                                                     response.getJSONObject("user").getString("username"),
                                                     response.getJSONObject("utente").getString("email"),
                                                     response.getJSONObject("utente").getString("password"),
@@ -248,47 +242,42 @@ public class RegistrationFragment extends Fragment {
                                         }
                                         t.start();
                                     }
-                                    /*Intent intent = new Intent(getActivity(), MainActivity.class);
-                                    startActivity(intent);*/
-                                    //NavHostFragment.findNavController(RegistrationFragment.this).navigate(R.id.action_registrationFragment_to_listaPokemonFragment);
                             }
                         }
                         , new Response.ErrorListener() {
-
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 // TODO: Handle error
                                 Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
                             }
                         });
-
+                // send request with a instance of singleton VOLLEY network android tool
                 SingletonVolley.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
-
             }
-
         });
 
         return v;
     }
-
-
 
     @Override
     public void onStart() {
         super.onStart();
     }
 
-    public class MyRunnable implements Runnable {
+    public class SaveUserDataLocalDBRunnable implements Runnable {
 
         private User user;
 
-        public MyRunnable(User user) {
+        public SaveUserDataLocalDBRunnable(User user) {
             this.user = user;
         }
 
         public void run() {
             AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
             db.userDao().getAll();
+            /*if there isn't a user with id 1 ( this is correct because the logic of application take only one user in local db,
+            if there is yet one user there isn't necessity to save another because the user is yey logged and the record is deleted
+            only when that do the logout*/
             if(db.userDao().loadUserUsername(1)==null) {
                 db.userDao().insert(new User(1, user.getUsername(), user.getEmail(), user.getPassword(), user.getPokedex(), user.getCodiceAmico(),
                         user.getPokedexCompletamento(), user.isGenere(), user.isAccesso()));
@@ -296,19 +285,15 @@ public class RegistrationFragment extends Fragment {
         }
     }
 
-    public class MyRunnable2 implements Runnable {
+    public class CeckLocalDBRunnable implements Runnable {
 
-        public MyRunnable2() {
-
-        }
-
+        public CeckLocalDBRunnable() { }
 
         public void run() {
-            //if(!getApplicationContext().getDatabasePath("pokedroid").exists()) {
+            Log.d(TAG, "run() called");
             AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
             db.userDao().getAll();
         }
     }
-        //}
 }
 

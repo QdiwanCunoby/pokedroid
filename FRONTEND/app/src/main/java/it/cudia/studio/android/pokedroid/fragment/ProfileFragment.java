@@ -1,6 +1,5 @@
 package it.cudia.studio.android.pokedroid.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,9 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import it.cudia.studio.android.pokedroid.R;
-import it.cudia.studio.android.pokedroid.activity.AccessActivity;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
-import it.cudia.studio.android.pokedroid.model.AppDatabase;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 
 /**
@@ -27,7 +24,7 @@ import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
-
+    private static final String TAG = "ProfileFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -90,6 +87,7 @@ public class ProfileFragment extends Fragment {
                 dialog = new CustomDialog();
                 dialog.setDialogLogout("Sei sicuro di voler uscire dal tuo profilo?");
                 dialog.show(getFragmentManager(),"CustomDialog");
+
             }
         });
 
@@ -102,7 +100,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        Button friendList = view.findViewById(R.id.btListaAmici);
+        Button friendList = view.findViewById(R.id.btRiscattaPokemon);
 
         friendList.setOnClickListener( new View.OnClickListener(){
 
@@ -122,6 +120,5 @@ public class ProfileFragment extends Fragment {
         PokedroidToolbar.enableBackNavigation();
         PokedroidToolbar.disableProfileIcon();
     }
-
 
 }

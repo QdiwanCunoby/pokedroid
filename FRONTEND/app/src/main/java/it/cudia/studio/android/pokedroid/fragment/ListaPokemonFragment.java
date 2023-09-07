@@ -37,6 +37,7 @@ import java.util.Vector;
 
 import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.adapter.PokeCardRecyclerViewAdapter;
+import it.cudia.studio.android.pokedroid.model.AppDatabase;
 import it.cudia.studio.android.pokedroid.model.Pokemon;
 import it.cudia.studio.android.pokedroid.request.BooleanRequest;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
@@ -93,6 +94,7 @@ public class ListaPokemonFragment extends Fragment {
         }
 
         setHasOptionsMenu(true);
+
         RequestQueue queue = SingletonVolley.getInstance(getActivity().getApplicationContext()).
                 getRequestQueue();
     }
@@ -102,7 +104,7 @@ public class ListaPokemonFragment extends Fragment {
                              Bundle savedInstanceState) {
 
        View view = inflater.inflate(R.layout.fragment_lista_pokemon, container, false);
-
+       PokedroidToolbar.disableBackNavigation();
        FloatingActionButton addPokemon = view.findViewById(R.id.addPokemon);
 
         addPokemon.setOnClickListener(new View.OnClickListener() {
@@ -113,68 +115,9 @@ public class ListaPokemonFragment extends Fragment {
         });
 
         // data to populate the RecyclerView with
-        Vector<Pokemon> data = new Vector<Pokemon>();
-        String url = getResources().getString(R.string.base_url)+"PokemonServlet?email=test@gmail.com&password=password";
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewListaPokemon);
-        int numberOfColumns = 2;
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),numberOfColumns, GridLayoutManager.VERTICAL, false));
-
-
-            JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET,url, null,
-                    new Response.Listener<JSONArray>() {
-                        @Override
-                        public void onResponse(JSONArray response) {
-
-
-
-                            for(int i=0; i<=150; i++){
-
-                                Log.d(TAG, new Pokemon(i+1).toString());
-                                data.add(new Pokemon(i+1));
-                            }
-
-                            int j = 0;
-
-                            while(j < response.length()){
-                                JSONObject jsonObject = (JSONObject) response.opt(j);
-                                try {
-                                    data.remove((int)jsonObject.getLong("idPokemon")-1);
-                                    data.add((int)jsonObject.getLong("idPokemon")-1,new Pokemon(
-                                            jsonObject.getLong("idPokemon"),
-                                            jsonObject.getString("nome"),
-                                            jsonObject.getInt("tipo"),
-                                            jsonObject.getInt("forza"),
-                                            jsonObject.getInt("grinta"),
-                                            jsonObject.getInt("fortuna"),
-                                            jsonObject.getInt("difesa"),
-                                            jsonObject.getInt("astuzia"),
-                                            jsonObject.getInt("resistenza"),
-                                            jsonObject.getInt("velocita")));
-                                } catch (JSONException ex) {
-                                    throw new RuntimeException(ex);
-                                }
-                                j++;
-                            }
-
-                            PokeCardRecyclerViewAdapter adapter = new PokeCardRecyclerViewAdapter(getContext(),data);
-                            try {
-                                Log.d(TAG, "onResponse() called with: response = [" + response + "]" + " "+response.get(0));
-                            } catch (JSONException e) {
-                                throw new RuntimeException(e);
-                            }
-                            recyclerView.setAdapter(adapter);
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
-                }
-            });
-
-            SingletonVolley.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
-
+        Thread t = new Thread(new RetrivePasswordAndEmailLocalDBRunnable(view.findViewById(R.id.recyclerViewListaPokemon)));
+        t.start();
 
 
         Log.d(TAG, "onCreateView() called with: inflater = [" + inflater + "], container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
@@ -196,7 +139,73 @@ public class ListaPokemonFragment extends Fragment {
         });
     }
 
+    public class RetrivePasswordAndEmailLocalDBRunnable implements Runnable {
+
+        RecyclerView recyclerView;
+        public RetrivePasswordAndEmailLocalDBRunnable(RecyclerView recyclerView) {
+            this.recyclerView = recyclerView;
+        }
+
+        public void run() {
+            Vector<Pokemon> data = new Vector<Pokemon>();
+
+            AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
+
+            if(db.userDao().loadUserUsername(1)!=null){
+                String url = getResources().getString(R.string.base_url)+"PokemonServlet?email="+db.userDao().loadUserEmail(1)+"&"+"password="+db.userDao().loadUserPassword(1);
+
+                int numberOfColumns = 2;
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(new GridLayoutManager(getContext(),numberOfColumns, GridLayoutManager.VERTICAL, false));
 
 
+                JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET,url, null,
+                        new Response.Listener<JSONArray>() {
+                            @Override
+                            public void onResponse(JSONArray response) {
 
+                                for(int i=0; i<=150; i++){
+
+                                    data.add(new Pokemon(i+1));
+                                }
+
+                                int j = 0;
+
+                                while(j < response.length()){
+                                    JSONObject jsonObject = (JSONObject) response.opt(j);
+                                    try {
+                                        data.remove((int)jsonObject.getLong("idPokemon")-1);
+                                        data.add((int)jsonObject.getLong("idPokemon")-1,new Pokemon(
+                                                jsonObject.getLong("idPokemon"),
+                                                jsonObject.getString("nome"),
+                                                jsonObject.getInt("tipo"),
+                                                jsonObject.getInt("forza"),
+                                                jsonObject.getInt("grinta"),
+                                                jsonObject.getInt("fortuna"),
+                                                jsonObject.getInt("difesa"),
+                                                jsonObject.getInt("astuzia"),
+                                                jsonObject.getInt("resistenza"),
+                                                jsonObject.getInt("velocita")));
+                                    } catch (JSONException ex) {
+                                        throw new RuntimeException(ex);
+                                    }
+                                    j++;
+                                }
+                                Log.d(TAG, data.toString());
+                                PokeCardRecyclerViewAdapter adapter = new PokeCardRecyclerViewAdapter(getContext(),data);
+
+                                recyclerView.setAdapter(adapter);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                    }
+                });
+
+                SingletonVolley.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+                Log.d(TAG, "run() called");
+            }
+        }
+    }
 }

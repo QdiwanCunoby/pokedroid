@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import it.cudia.studio.android.pokedroid.activity.MainActivity;
  * create an instance of this fragment.
  */
 public class SplahPageWelcomeFragment extends Fragment {
+
+    private static final String TAG = "SplahPageWelcomeFragmen";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,6 +60,7 @@ public class SplahPageWelcomeFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate() called with: savedInstanceState = [" + savedInstanceState + "]");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -69,6 +73,7 @@ public class SplahPageWelcomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView() called with: inflater = [" + inflater + "], container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
         View v = inflater.inflate(R.layout.fragment_splah_page_welcome, container, false);
 
         return v;
@@ -76,21 +81,22 @@ public class SplahPageWelcomeFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onViewCreated() called with: view = [" + view + "], savedInstanceState = [" + savedInstanceState + "]");
         super.onViewCreated(view, savedInstanceState);
-        final Handler handler = new Handler();
+        final Handler handler = new Handler(); // instatiate Handler. A Handler allows you to send and process Message and Runnable objects associated with a thread's MessageQueue. Each Handler instance is associated with a single thread and that thread's message queue.
+        /*Delay 5s switch to UI main Thread the rendering and start of AccessActivity */
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent intent  =  new Intent(getActivity(), AccessActivity.class);
                 startActivity(intent);
-
             }
         }, 5000);
     }
 
     @Override
     public void onDestroyView() {
+        Log.d(TAG, "onDestroyView() called");
         super.onDestroyView();
-
     }
 }

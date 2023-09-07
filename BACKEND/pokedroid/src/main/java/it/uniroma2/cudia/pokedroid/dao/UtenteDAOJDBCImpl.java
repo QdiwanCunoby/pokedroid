@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 import java.sql.Statement;
 
+import it.uniroma2.cudia.pokedroid.dto.ProspettoUtenteDTO;
+import it.uniroma2.cudia.pokedroid.entity.Pokedex;
+import it.uniroma2.cudia.pokedroid.entity.User;
 import it.uniroma2.cudia.pokedroid.entity.Utente;
 
 public class UtenteDAOJDBCImpl implements UtenteDAO {
@@ -75,7 +78,7 @@ public class UtenteDAOJDBCImpl implements UtenteDAO {
 	}
 
 	@Override
-	public int checkRegistrazioneUtenza(String email, String password) {
+	public ProspettoUtenteDTO checkRegistrazioneUtenza(String email, String password) {
 		String query = "SELECT * FROM utente WHERE uten_mail = '" + email + "' AND uten_password = '" + password +"'";
 		System.out.println(query);
 
@@ -83,17 +86,32 @@ public class UtenteDAOJDBCImpl implements UtenteDAO {
 			Statement stmt = conn.createStatement();
 			ResultSet rset = stmt.executeQuery(query);
 
-			int res = -1;
-			if (rset.next())
-				res = rset.getInt(1);
-
+			ProspettoUtenteDTO prospettoUtente = null;
+			if (rset.next()) {
+				
+				String SEARCH_USER = "SELECT us.user_username, us.user_genere, us.user_id_pokedex, us.user_codice_amico, p.poke_completamento "
+						+ "FROM utente AS ut INNER JOIN utenza AS u  ON ut.uten_id = u.uten_id , pokedex AS p, `user` AS us "
+						+ "WHERE ut.uten_mail = '"+ email + "' AND ut.uten_password = '"+password+"' AND p.poke_id = us.user_id_pokedex";
+				
+				rset = stmt.executeQuery(SEARCH_USER);
+				
+				if (rset.next()) {
+					System.out.println(rset.getString(1));
+					
+					prospettoUtente =  new ProspettoUtenteDTO(
+							new User(0,rset.getString(1),rset.getBoolean(2),rset.getLong(3),rset.getString(4))
+							, new Utente(email,password)
+							, new Pokedex(rset.getLong(3),rset.getInt(5)));
+				}
+			}
+				
 			rset.close();
 			stmt.close();
-
-			return res;
+			System.out.println(prospettoUtente);
+			return prospettoUtente;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return -1;
+			return null;
 		}
 	}
 	

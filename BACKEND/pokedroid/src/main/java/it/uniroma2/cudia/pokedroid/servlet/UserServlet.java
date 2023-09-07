@@ -55,7 +55,7 @@ public class UserServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("MusicianServlet. Invoking a doPost method...");
+		System.out.println("UserServlet. Invoking a doPost method...");
 
 		PrintWriter out = response.getWriter();
 		
@@ -85,7 +85,7 @@ public class UserServlet extends HttpServlet {
 		}
 		
 		try {
-			if(dao.createUser(user) != 1) {
+			if(dao.createUser(user) == null ) {
 				response.getWriter().append("false");
 			}
 			else {

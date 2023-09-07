@@ -32,6 +32,9 @@ public interface UserDao {
     @Query("SELECT user_pokedex FROM user WHERE uid = :userId")
     int loadUserPokedex(int userId);
 
+    @Query("SELECT accesso FROM user WHERE uid = :userId")
+    int loadUserAccesso(int userId);
+
     @Insert
     void insert(User user);
 

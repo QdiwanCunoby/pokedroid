@@ -52,7 +52,7 @@
             </androidx.cardview.widget.CardView>
 
             <EditText
-                android:id="@+id/etEmailAccedi"
+                android:id="@+id/etCodicePokemon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
@@ -86,7 +86,7 @@
                 android:textStyle="bold" />
 
             <Switch
-                android:id="@+id/swMantieniAccesso"
+                android:id="@+id/swMantieniAccessoLog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -98,7 +98,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/btListaAmici"
+                android:id="@+id/btRiscattaPokemon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/custom_button_red"

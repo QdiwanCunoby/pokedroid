@@ -88,8 +88,9 @@ public class PokemonDAOJDBCImpl implements PokemonDAO {
 	}
 	
 	@Override
-	public void riscattaPokemon(long pokemon_id,long pokedex_id) throws SQLException {
+	public int riscattaPokemon(long pokemon_id,long pokedex_id) throws SQLException {
 		String SQL_INSERT ="INSERT INTO avanzamento(pokemon_id,pokedex_id) VALUES("+pokemon_id+","+pokedex_id+")";
+		try {
 		conn.setAutoCommit(false);
 		
 		PreparedStatement pstmt = conn.prepareStatement(SQL_INSERT);
@@ -97,8 +98,33 @@ public class PokemonDAOJDBCImpl implements PokemonDAO {
 		pstmt.executeUpdate();
 		
 		conn.commit();
-		return;
 		
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		
+		return 1;
+		
+	}
+	
+	public long checkCodiceRiscattoPokemon(String codiceRiscattoPokemon) throws SQLException {
+		
+		String SELECT_CODICE_RISCATTO = "SELECT poke_id FROM pokemon WHERE poke_codice_attivazione = '"+ codiceRiscattoPokemon +"'";
+		conn.setAutoCommit(false);
+		
+		ResultSet affectedRows = null;
+		PreparedStatement pstmt = conn.prepareStatement(SELECT_CODICE_RISCATTO);
+		affectedRows = pstmt.executeQuery();
+		
+		if(affectedRows.next()) {
+			return affectedRows.getLong(1);
+		}
+		
+		conn.commit();
+		
+		return 0;
 	}
 
 	@Override

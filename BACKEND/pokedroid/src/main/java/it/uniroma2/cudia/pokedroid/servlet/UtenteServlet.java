@@ -14,6 +14,7 @@ import org.json.JSONException;
 
 import it.uniroma2.cudia.pokedroid.dao.UtenteDAO;
 import it.uniroma2.cudia.pokedroid.dao.UtenteDAOJDBCImpl;
+import it.uniroma2.cudia.pokedroid.dto.ProspettoUtenteDTO;
 import it.uniroma2.cudia.pokedroid.entity.Utente;
 
 public class UtenteServlet extends HttpServlet {
@@ -81,7 +82,7 @@ public class UtenteServlet extends HttpServlet {
 		}
 		
 		try {
-			if(dao.createUtente(utente) == -1) {
+			if(dao.createUtente(utente) == null) {
 				response.getWriter().append("false");
 			}
 			else {
@@ -104,12 +105,12 @@ public class UtenteServlet extends HttpServlet {
 		System.out.println("UtenteServlet. Invoking a doGet method.");
 		
 		PrintWriter out = response.getWriter();
-		
-		if(dao.checkRegistrazioneUtenza(request.getParameter("email"),request.getParameter("password")) == -1) {
-			response.getWriter().append("false");
+		ProspettoUtenteDTO prospettoUtente = dao.checkRegistrazioneUtenza(request.getParameter("email"),request.getParameter("password"));
+		if( prospettoUtente != null) {
+			response.getWriter().append(prospettoUtente.toJsonString());
 		}
 		else {
-			response.getWriter().append("true");
+			response.getWriter().append(null);
 		}
 	}
 }

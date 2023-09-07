@@ -6,15 +6,31 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
+import it.cudia.studio.android.pokedroid.model.AppDatabase;
+import it.cudia.studio.android.pokedroid.model.entity.User;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
+import it.cudia.studio.android.pokedroid.singleton.SingletonVolley;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +38,8 @@ import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
  * create an instance of this fragment.
  */
 public class RiscattaPokemonFragment extends Fragment {
+
+    private static final String TAG = "RiscattaPokemonFragment";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,6 +49,9 @@ public class RiscattaPokemonFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    EditText etCodicePokemon;
+    Button btRiscattaPokemon;
 
     public RiscattaPokemonFragment() {
         // Required empty public constructor
@@ -70,7 +91,26 @@ public class RiscattaPokemonFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         requireActivity().getSupportFragmentManager();
-        return inflater.inflate(R.layout.fragment_riscatta_pokemon, container, false);
+        View view =  inflater.inflate(R.layout.fragment_riscatta_pokemon, container, false);
+        etCodicePokemon = view.findViewById(R.id.etCodicePokemon);
+        btRiscattaPokemon = view.findViewById(R.id.btRiscattaPokemon);
+        CustomDialog dialog = new CustomDialog();
+        btRiscattaPokemon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick() called with:"+ etCodicePokemon.getText().toString());
+                if(etCodicePokemon.getText().toString().equals("")){
+                    Log.d(TAG, "onClick() called inner if with :"+ etCodicePokemon.getText().toString());
+                    dialog.setDialogWrong("il campo per il codice di riscatto del pokemon e' vuoto!");
+                    dialog.show(getFragmentManager(),"CustomDialog");
+                }else{
+                    Thread t = new Thread( new RetrivePokedexIdLocalDBRunnable());
+                    t.start();
+                }
+            }
+        });
+
+        return view;
     }
 
     @Override
@@ -87,4 +127,63 @@ public class RiscattaPokemonFragment extends Fragment {
         });
     }
 
+    public class RetrivePokedexIdLocalDBRunnable implements Runnable {
+
+        public RetrivePokedexIdLocalDBRunnable() { }
+
+        public void run() {
+            Log.d(TAG, "run() called");
+            AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
+
+            String json_string = null;
+            if(db.userDao().loadUserUsername(1)!=null) {
+
+                //prepare json to make request of registration at the backe-end
+                json_string = "{\n" +
+                        "    codice: '"+ etCodicePokemon.getText().toString() +"',\n" +
+                        "    idPokedex : "+ db.userDao().loadUserPokedex(1) +"\n" +
+                        "}";
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(json_string); // make a json string in a json object
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                String url = getResources().getString(R.string.base_url)+"PokemonServlet";
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                CustomDialog dialog = new CustomDialog();
+                                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                                try {
+                                    if(response.getString("esito").equals("false")){
+                                        dialog.setDialogWrong("il codice di riscatto non e' corretto!");
+                                    }else if(response.getString("esito").equals("already inserted")){
+                                        dialog.setDialogWarning("il pokemon e' gia' stato riscattato!");
+                                    }else if(response.getString("esito").equals("true")){
+                                        dialog.setDialogRight("nuovo pokemon riscattato con successo!");
+                                    }else{
+                                        dialog.setDialogWrong("qualcosa e' andato storto, si e' verificato un disservizio!");
+                                    }
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                dialog.show(getFragmentManager(),"CustomDialog");
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO: Handle error
+                                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                            }
+                        });
+                // send request with a instance of singleton VOLLEY network android tool
+                SingletonVolley.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+            }
+
+
+        }
+    }
 }
