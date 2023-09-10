@@ -1,8 +1,10 @@
 package it.cudia.studio.android.pokedroid.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -16,16 +18,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.activity.CaptureActivityPortrait;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
 import it.cudia.studio.android.pokedroid.model.AppDatabase;
 import it.cudia.studio.android.pokedroid.model.entity.User;
@@ -52,6 +58,7 @@ public class RiscattaPokemonFragment extends Fragment {
 
     EditText etCodicePokemon;
     Button btRiscattaPokemon;
+    Button btQrRiscattaPokemon;
 
     public RiscattaPokemonFragment() {
         // Required empty public constructor
@@ -94,6 +101,7 @@ public class RiscattaPokemonFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_riscatta_pokemon, container, false);
         etCodicePokemon = view.findViewById(R.id.etCodicePokemon);
         btRiscattaPokemon = view.findViewById(R.id.btRiscattaPokemon);
+        btQrRiscattaPokemon = view.findViewById(R.id.btQrScanner);
         CustomDialog dialog = new CustomDialog();
         btRiscattaPokemon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +118,39 @@ public class RiscattaPokemonFragment extends Fragment {
             }
         });
 
+        btQrRiscattaPokemon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // we need to create the object
+                // of IntentIntegrator class
+                // which is the class of QR library
+                IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+                intentIntegrator.setPrompt("Scan a barcode or QR Code");
+                intentIntegrator.setOrientationLocked(true);
+                intentIntegrator.setBeepEnabled(true);
+                intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
+                intentIntegrator.initiateScan();
+            }
+        });
+
+
+
         return view;
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onCreateView() called with: inflater PASSAGGIO");
+        if(getArguments()!=null){
+            Log.d(TAG, "onCreateView() called with: inflater PASSAGGIO =" + getArguments());
+            if(getArguments().getString("QrText")!=null){
+                Log.d(TAG, "onCreateView() called with: inflater PASSAGGIO =" + getArguments().getString("QrText"));
+                Thread t = new Thread(new RetrivePokedexIdLocalDBUseQrRunnable(getArguments().getString("QrText")));
+                t.start();
+            }
+        }
     }
 
     @Override
@@ -141,6 +181,69 @@ public class RiscattaPokemonFragment extends Fragment {
                 //prepare json to make request of registration at the backe-end
                 json_string = "{\n" +
                         "    codice: '"+ etCodicePokemon.getText().toString() +"',\n" +
+                        "    idPokedex : "+ db.userDao().loadUserPokedex(1) +"\n" +
+                        "}";
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(json_string); // make a json string in a json object
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                String url = getResources().getString(R.string.base_url)+"PokemonServlet";
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                CustomDialog dialog = new CustomDialog();
+                                Log.d(TAG, "onResponse() called with: response = [" + response + "]");
+                                try {
+                                    if(response.getString("esito").equals("false")){
+                                        dialog.setDialogWrong("il codice di riscatto non e' corretto!");
+                                    }else if(response.getString("esito").equals("already inserted")){
+                                        dialog.setDialogWarning("il pokemon e' gia' stato riscattato!");
+                                    }else if(response.getString("esito").equals("true")){
+                                        dialog.setDialogRight("nuovo pokemon riscattato con successo!");
+                                    }else{
+                                        dialog.setDialogWrong("qualcosa e' andato storto, si e' verificato un disservizio!");
+                                    }
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                dialog.show(getFragmentManager(),"CustomDialog");
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO: Handle error
+                                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                            }
+                        });
+                // send request with a instance of singleton VOLLEY network android tool
+                SingletonVolley.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+            }
+
+
+        }
+    }
+
+    public class RetrivePokedexIdLocalDBUseQrRunnable implements Runnable {
+
+        String qrText;
+        public RetrivePokedexIdLocalDBUseQrRunnable(String qrText) {
+            this.qrText = qrText;
+        }
+
+        public void run() {
+            Log.d(TAG, "run() called");
+            AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
+
+            String json_string = null;
+            if(db.userDao().loadUserUsername(1)!=null) {
+
+                //prepare json to make request of registration at the backe-end
+                json_string = "{\n" +
+                        "    codice: '"+ this.qrText +"',\n" +
                         "    idPokedex : "+ db.userDao().loadUserPokedex(1) +"\n" +
                         "}";
                 JSONObject jsonObject;
