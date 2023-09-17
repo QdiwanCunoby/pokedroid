@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.LinearLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -106,7 +107,8 @@ public class ListaPokemonFragment extends Fragment {
        View view = inflater.inflate(R.layout.fragment_lista_pokemon, container, false);
        PokedroidToolbar.disableBackNavigation();
        FloatingActionButton addPokemon = view.findViewById(R.id.addPokemon);
-
+       LinearLayout lyUserInfoStat = view.findViewById(R.id.lyUserInfoStat);
+       lyUserInfoStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.color_card));
         addPokemon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

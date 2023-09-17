@@ -1,10 +1,8 @@
 package it.cudia.studio.android.pokedroid.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -17,15 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +29,6 @@ import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.activity.CaptureActivityPortrait;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
 import it.cudia.studio.android.pokedroid.model.AppDatabase;
-import it.cudia.studio.android.pokedroid.model.entity.User;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 import it.cudia.studio.android.pokedroid.singleton.SingletonVolley;
 
@@ -101,7 +95,7 @@ public class RiscattaPokemonFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_riscatta_pokemon, container, false);
         etCodicePokemon = view.findViewById(R.id.etCodicePokemon);
         btRiscattaPokemon = view.findViewById(R.id.btRiscattaPokemon);
-        btQrRiscattaPokemon = view.findViewById(R.id.btQrScanner);
+        btQrRiscattaPokemon = view.findViewById(R.id.btQrScannerFriendship);
         CustomDialog dialog = new CustomDialog();
         btRiscattaPokemon.setOnClickListener(new View.OnClickListener() {
             @Override

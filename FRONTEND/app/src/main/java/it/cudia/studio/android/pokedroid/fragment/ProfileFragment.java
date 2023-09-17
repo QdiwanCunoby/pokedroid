@@ -1,5 +1,7 @@
 package it.cudia.studio.android.pokedroid.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,10 +14,17 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 
 import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
+import it.cudia.studio.android.pokedroid.services.MyFirebaseInstanceIDService;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 
 /**
@@ -36,6 +45,7 @@ public class ProfileFragment extends Fragment {
 
     TextView logout;
     CustomDialog dialog;
+    ImageView imgQRcodeFrindship;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -111,7 +121,33 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        imgQRcodeFrindship = view.findViewById(R.id.imgQRcodeFrindship);
+
+        try {
+            imgQRcodeFrindship.setImageBitmap(encodeAsBitmap(MyFirebaseInstanceIDService.getToken(getContext())));
+        } catch (WriterException e) {
+            throw new RuntimeException(e);
+        }
+
         return view;
+    }
+
+    Bitmap encodeAsBitmap(String str) throws WriterException {
+        QRCodeWriter writer = new QRCodeWriter();
+        BitMatrix bitMatrix = writer.encode(str, BarcodeFormat.QR_CODE, 400, 400);
+
+        int w = bitMatrix.getWidth();
+        int h = bitMatrix.getHeight();
+        int[] pixels = new int[w * h];
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                pixels[y * w + x] = bitMatrix.get(x, y) ? Color.BLACK : Color.argb(95,197,3,3);
+            }
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        bitmap.setPixels(pixels, 0, w, 0, 0, w, h);
+        return bitmap;
     }
 
     @Override

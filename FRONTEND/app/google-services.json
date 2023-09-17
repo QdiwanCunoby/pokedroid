@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "896927093617",
+    "project_id": "pokedroid-b4317",
+    "storage_bucket": "pokedroid-b4317.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896927093617:android:ab97458134f75d5b3ddcd0",
+        "android_client_info": {
+          "package_name": "it.cudia.studio.android.pokedroid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3lGlsNH2K0kJ3h7caC5rPXbbns0yZTgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

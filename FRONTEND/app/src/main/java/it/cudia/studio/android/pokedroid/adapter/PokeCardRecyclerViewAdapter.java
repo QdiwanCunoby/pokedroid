@@ -69,6 +69,8 @@ public class PokeCardRecyclerViewAdapter extends RecyclerView.Adapter<PokeCardRe
                     result.putInt("fortuna", mData.get(holder.getAdapterPosition()).getFortuna());
                     result.putInt("astuzia", mData.get(holder.getAdapterPosition()).getAstuzia());
                     result.putInt("resistenza", mData.get(holder.getAdapterPosition()).getResistenza());
+                    result.putInt("tipo", mData.get(holder.getAdapterPosition()).getTipo());
+                    result.putString("pokemonImage", mData.get(holder.getAdapterPosition()).getNome().toLowerCase());
                     Log.d(TAG, result.toString());
 
                     FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();

@@ -13,7 +13,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/lyUserInfoStat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/progre_pokedex_list_menu"
@@ -94,7 +94,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/lyUserInfoStat"
             app:layout_constraintVertical_bias="0.0"
             tools:listitem="@layout/card_pokemon" />
 

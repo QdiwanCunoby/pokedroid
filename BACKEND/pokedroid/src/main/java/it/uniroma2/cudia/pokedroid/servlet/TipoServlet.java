@@ -1,6 +1,6 @@
 package it.uniroma2.cudia.pokedroid.servlet;
 
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServlet;
 
 public class TipoServlet extends HttpServlet {
 

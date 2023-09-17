@@ -13,6 +13,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/lyBackgroundPokeStat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/progre_pokedex_list_menu"
@@ -35,9 +36,9 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/imgPokemonStat"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="152dp"
                 tools:src="@tools:sample/avatars" />
 
             <LinearLayout
@@ -77,14 +78,18 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="432dp"
+            android:layout_width="411dp"
+            android:layout_height="403dp"
             android:layout_gravity="bottom"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="4dp"
             android:orientation="vertical"
             android:padding="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
 
             <com.github.mikephil.charting.charts.RadarChart

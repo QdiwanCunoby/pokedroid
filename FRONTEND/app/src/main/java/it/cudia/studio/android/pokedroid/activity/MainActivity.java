@@ -39,6 +39,7 @@ import it.cudia.studio.android.pokedroid.fragment.RegistrationFragment;
 import it.cudia.studio.android.pokedroid.fragment.RiscattaPokemonFragment;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
 import it.cudia.studio.android.pokedroid.model.AppDatabase;
+import it.cudia.studio.android.pokedroid.services.MyFirebaseInstanceIDService;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 import it.cudia.studio.android.pokedroid.singleton.SingletonVolley;
 
@@ -73,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
         if (intentResult != null) {
             if (intentResult.getContents() == null) {
                 Toast.makeText(getBaseContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+            }else if(intentResult.getContents().length() == MyFirebaseInstanceIDService.getToken(getBaseContext()).length()){
+                Thread t = new Thread(new MainActivity.SendNotiphicationFriendshipRunnable(intentResult.getContents()));
+                t.start();
             } else {
                 // if the intentResult is not null we'll set
                 // the content and format of scan message
@@ -132,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 //prepare json to make request of registration at the backe-end
                 json_string = "{\n" +
                         "    codice: '"+ this.qrText +"',\n" +
-                        "    idPokedex : "+ db.userDao().loadUserPokedex(1) +"\n" +
+                        "    idPokedex : '"+ db.userDao().loadUserPokedex(1) +"'\n" +
                         "}";
                 JSONObject jsonObject;
                 try {
@@ -177,5 +181,47 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    public class SendNotiphicationFriendshipRunnable implements Runnable {
+
+        String qrText;
+        public SendNotiphicationFriendshipRunnable(String qrText) {
+            this.qrText = qrText;
+        }
+
+        public void run() {
+            String url = getResources().getString(R.string.base_url)+"NotificationServlet";
+
+            AppDatabase db = AppDatabase.getInstance(getBaseContext());
+
+            String json_string = null;
+            if(db.userDao().loadUserUsername(1)!=null) {
+                json_string = "{\n" +
+                        "    username: '"+ db.userDao().loadUserUsername(1) +"',\n" +
+                        "    token : '"+ qrText +"'\n" +
+                        "}";
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(json_string); // make a json string in a json object
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {}
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO: Handle error
+                                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                            }
+                        });
+                // send request with a instance of singleton VOLLEY network android tool
+                SingletonVolley.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+            }
+        }
+    }
 }
+
 

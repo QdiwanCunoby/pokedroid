@@ -6,15 +6,30 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.zxing.integration.android.IntentIntegrator;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.activity.CaptureActivityPortrait;
+import it.cudia.studio.android.pokedroid.model.AppDatabase;
+import it.cudia.studio.android.pokedroid.services.MyFirebaseInstanceIDService;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
+import it.cudia.studio.android.pokedroid.singleton.SingletonVolley;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +37,8 @@ import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
  * create an instance of this fragment.
  */
 public class SendFrindshipRequestFragment extends Fragment {
+
+    private static final String TAG = "SendFrindshipRequestFra";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,8 +86,40 @@ public class SendFrindshipRequestFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_send_frindship_request, container, false);
+        View view = inflater.inflate(R.layout.fragment_send_frindship_request, container, false);
+
+        Button btQrRiscattaPokemon = view.findViewById(R.id.btQrScannerFriendship);
+        btQrRiscattaPokemon.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // we need to create the object
+                // of IntentIntegrator class
+                // which is the class of QR library
+                IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+                intentIntegrator.setPrompt("Scan a barcode or QR Code");
+                intentIntegrator.setOrientationLocked(true);
+                intentIntegrator.setBeepEnabled(true);
+                intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
+                intentIntegrator.initiateScan();
+            }
+        });
+        return view;
     }
+
+    /*@Override
+    /*public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onCreateView() called with: inflater PASSAGGIO");
+        if(getArguments()!=null){
+            Log.d(TAG, "onCreateView() called with: inflater PASSAGGIO =" + getArguments());
+            if(getArguments().getString("QrText")!=null){
+                Log.d(TAG, "onCreateView() called with: inflater PASSAGGIO =" + getArguments().getString("QrText"));
+                Thread t = new Thread(new SendNotiphicationFriendshipRunnable(getArguments().getString("QrText")));
+                t.start();
+            }
+        }
+    }*/
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){
@@ -86,4 +135,6 @@ public class SendFrindshipRequestFragment extends Fragment {
         });
 
     }
+
+
 }

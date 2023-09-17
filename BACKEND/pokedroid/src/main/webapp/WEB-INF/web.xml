@@ -5,7 +5,38 @@
 	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd http://xmlns.jcp.org/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="5.0">
 	<display-name>pokedroid</display-name>
-	
+	<!-- START notification servlet config -->
+	<servlet>
+		<description></description>
+		<display-name>NotificationServlet</display-name>
+		<servlet-name>NotificationServlet</servlet-name>
+		<servlet-class>it.uniroma2.cudia.pokedroid.servlet.NotificationServlet</servlet-class>
+		<init-param>
+			<param-name>ip</param-name>
+			<param-value>127.0.0.1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>port</param-name>
+			<param-value>3306</param-value>
+		</init-param>
+		<init-param>
+			<param-name>dbName</param-name>
+			<param-value>pokedroid</param-value>
+		</init-param>
+		<init-param>
+			<param-name>userName</param-name>
+			<param-value>qdwancunoby</param-value>
+		</init-param>
+		<init-param>
+			<param-name>password</param-name>
+			<param-value>vogliolaurearmi</param-value>
+		</init-param> 
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NotificationServlet</servlet-name>
+		<url-pattern>/NotificationServlet</url-pattern>
+	</servlet-mapping>
+	<!-- END notification servlet config -->
 	
 	<!-- START amicizia servlet config -->
 	<servlet>
