@@ -294,6 +294,7 @@ public class PokemonStatisticsFragment extends Fragment {
         super.onCreateOptionsMenu(menu,menuInflater);
 
         PokedroidToolbar.enableBackNavigation();
+        PokedroidToolbar.disableProfileIcon();
         menu.findItem(R.id.menu_profile).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem item) {

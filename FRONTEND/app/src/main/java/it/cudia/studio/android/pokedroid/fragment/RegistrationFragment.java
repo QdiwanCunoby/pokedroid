@@ -106,7 +106,7 @@ public class RegistrationFragment extends Fragment {
 
          email = v.findViewById(R.id.etEmail);
          confermaEmail = v.findViewById(R.id.etConfermaEmail);
-         password = v.findViewById(R.id.etPasswordAccedi);
+         password = v.findViewById(R.id.etCodiceAmico);
          confermaPassword = v.findViewById(R.id.etConfermaPassword);
          username =  v.findViewById(R.id.etUsername);
          genere = v.findViewById(R.id.genere);
@@ -135,7 +135,7 @@ public class RegistrationFragment extends Fragment {
             }
         });
 
-        Button btRegistrati = v.findViewById(R.id.btRiscattaPokemon);
+        Button btRegistrati = v.findViewById(R.id.btSendFrinedshipRequest);
         CustomDialog dialog = new CustomDialog();// custom dialog is a extends of DialogFragment to have a dialog with custom look :)
 
         btRegistrati.setOnClickListener(new View.OnClickListener() {

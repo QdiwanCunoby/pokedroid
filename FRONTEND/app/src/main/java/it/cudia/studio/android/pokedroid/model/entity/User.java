@@ -30,9 +30,20 @@ public class User {
     @ColumnInfo(name="pokedex_completamento")
     private float pokedexCompletamento;
 
+    @ColumnInfo(name="profile_image")
+    private String profileImage;
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
     public User(int uid, String username, String email,
                 String password, int pokedex, String codiceAmico,
-                float pokedexCompletamento ,boolean genere,boolean accesso) {
+                float pokedexCompletamento , boolean genere, boolean accesso) {
         this.uid = uid;
         this.username = username;
         this.email = email;

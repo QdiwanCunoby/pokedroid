@@ -24,10 +24,14 @@ public interface UserDao {
 
     @Query("SELECT user_email FROM user WHERE uid = :userId")
     String loadUserEmail(int userId);
+    @Query("SELECT profile_image FROM user WHERE uid = :userId")
+    String loadUserProfileImage(int userId);
 
     @Query("SELECT user_password FROM user WHERE uid = :userId")
     String loadUserPassword(int userId);
 
+    @Query("SELECT pokedex_completamento FROM user WHERE uid = :userId")
+    Double loadAvanzamentoPokedex(int userId);
 
     @Query("SELECT user_pokedex FROM user WHERE uid = :userId")
     int loadUserPokedex(int userId);
@@ -43,6 +47,10 @@ public interface UserDao {
 
     @Query("DELETE FROM user WHERE uid = :id")
     void deleteById(int id);
+
+    @Query("UPDATE user SET profile_image = :img")
+    void updateImgProfile(String img);
+
 }
 
 class UserCredential {

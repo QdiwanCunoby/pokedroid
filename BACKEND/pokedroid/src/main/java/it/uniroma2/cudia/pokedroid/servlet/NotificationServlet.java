@@ -23,7 +23,7 @@ import java.sql.SQLException;
 
 import org.json.JSONObject;
 
-@WebServlet(name = "NotificationServlet", value = "/NotificationServlet")
+
 public class NotificationServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1203037409163758769L;

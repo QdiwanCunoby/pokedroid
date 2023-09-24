@@ -44,7 +44,7 @@
                 app:cardCornerRadius="50dp">
 
                 <ImageView
-                    android:id="@+id/imageView1"
+                    android:id="@+id/imgProfile"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:layout_alignParentTop="true"
@@ -87,7 +87,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/etPasswordAccedi"
+                android:id="@+id/etCodiceAmico"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
@@ -175,7 +175,7 @@
                 />
 
             <Button
-                android:id="@+id/btRiscattaPokemon"
+                android:id="@+id/btSendFrinedshipRequest"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/custom_button_red"

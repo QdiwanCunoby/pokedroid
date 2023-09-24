@@ -2,6 +2,7 @@ package it.cudia.studio.android.pokedroid.services;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -43,12 +44,39 @@ public class MyFirebaseInstanceIDService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         Log.d(TAG, "onMessageReceived() called with: remoteMessage = [" + remoteMessage.getData().get("score") + "]");
+
+        Intent mainIntent = new Intent(this, MainActivity.class);
+
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent mainPIntent = PendingIntent.getActivity(this, 0, mainIntent,  PendingIntent.FLAG_MUTABLE  | PendingIntent.FLAG_UPDATE_CURRENT );
+
+        Intent acceptFriendshipIntent = new Intent(this, MainActivity.class);
+
+        acceptFriendshipIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        acceptFriendshipIntent.putExtra("methodName","acceptFriend");
+        acceptFriendshipIntent.putExtra("usernameMandante",remoteMessage.getData().get("username"));
+        acceptFriendshipIntent.putExtra("tokenMandante",remoteMessage.getData().get("token"));
+        PendingIntent acceptFriendshipPIntent = PendingIntent.getActivity(this, 1, acceptFriendshipIntent,  PendingIntent.FLAG_MUTABLE  | PendingIntent.FLAG_UPDATE_CURRENT );
+
+        Intent discardFriendshipIntent = new Intent(this, MainActivity.class);
+
+        discardFriendshipIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        discardFriendshipIntent.putExtra("methodName","discardFriend");
+        discardFriendshipIntent.putExtra("usernameMandante",remoteMessage.getData().get("username"));
+        discardFriendshipIntent.putExtra("tokenMandante",remoteMessage.getData().get("token"));
+        PendingIntent discardFriendshipPIntent = PendingIntent.getActivity(this, 2, discardFriendshipIntent,  PendingIntent.FLAG_MUTABLE  | PendingIntent.FLAG_UPDATE_CURRENT );
+        //
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.pika_icon)
                 .setContentTitle("Richiesta di amicizia")
-                .setContentText(remoteMessage.getData().get("username"))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT).setShowWhen(true)
-                .setAutoCancel(false);
+                .setContentText("Richiesta di amicizia da parte di "+remoteMessage.getData().get("username"))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT).
+                setShowWhen(true)
+                .setAutoCancel(true)
+                .setContentIntent(mainPIntent)
+                .addAction(R.drawable.baseline_group_add_24,"Accept friend",acceptFriendshipPIntent)
+                .addAction(R.drawable.baseline_do_not_disturb_24,"Discard friend",discardFriendshipPIntent);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 

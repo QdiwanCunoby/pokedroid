@@ -1,5 +1,6 @@
 package it.cudia.studio.android.pokedroid.fragment;
 
+import static androidx.core.app.ActivityCompat.invalidateOptionsMenu;
 import static com.google.android.material.color.utilities.MaterialDynamicColors.error;
 
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -52,8 +55,6 @@ import it.cudia.studio.android.pokedroid.singleton.SingletonVolley;
 public class ListaPokemonFragment extends Fragment {
 
     private static final String TAG = "ListaPokemonFragment";
-
-    private RecyclerView pokeCard;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -95,7 +96,7 @@ public class ListaPokemonFragment extends Fragment {
         }
 
         setHasOptionsMenu(true);
-
+        invalidateOptionsMenu(getActivity());
         RequestQueue queue = SingletonVolley.getInstance(getActivity().getApplicationContext()).
                 getRequestQueue();
     }
@@ -121,6 +122,10 @@ public class ListaPokemonFragment extends Fragment {
         Thread t = new Thread(new RetrivePasswordAndEmailLocalDBRunnable(view.findViewById(R.id.recyclerViewListaPokemon)));
         t.start();
 
+        Thread t_setUserData = new Thread(new RetriveDataUserLocalDBRunnable(view.findViewById(R.id.tvUsernameUserLista),
+                view.findViewById(R.id.tvPercentualeAvanzamentoPokedex),
+                view.findViewById(R.id.pbAvanzamento)));
+        t_setUserData.start();
 
         Log.d(TAG, "onCreateView() called with: inflater = [" + inflater + "], container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
         // Inflate the layout for this fragment
@@ -128,9 +133,13 @@ public class ListaPokemonFragment extends Fragment {
         return view;
     }
 
+
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){
         super.onCreateOptionsMenu(menu,menuInflater);
+
+        menu.findItem(R.id.menu_profile).setVisible(true);
 
         menu.findItem(R.id.menu_profile).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -141,10 +150,16 @@ public class ListaPokemonFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        menu.findItem(R.id.menu_profile).setVisible(true);
+    }
+
     public class RetrivePasswordAndEmailLocalDBRunnable implements Runnable {
 
         RecyclerView recyclerView;
-        public RetrivePasswordAndEmailLocalDBRunnable(RecyclerView recyclerView) {
+        RetrivePasswordAndEmailLocalDBRunnable(RecyclerView recyclerView) {
             this.recyclerView = recyclerView;
         }
 
@@ -208,6 +223,35 @@ public class ListaPokemonFragment extends Fragment {
                 SingletonVolley.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
                 Log.d(TAG, "run() called");
             }
+        }
+    }
+
+    public class RetriveDataUserLocalDBRunnable implements Runnable {
+
+        TextView username;
+        TextView avanzamentoPokedex;
+        ProgressBar pbAvanzamento;
+        RetriveDataUserLocalDBRunnable(TextView username, TextView avanzamentoPokedex, ProgressBar pbAvantamento) {
+            this.username = username;
+            this.avanzamentoPokedex = avanzamentoPokedex;
+            this.pbAvanzamento = pbAvantamento;
+        }
+        public void run() {
+            AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
+
+            if(db.userDao().loadUserUsername(1)!=null){
+                this.username.setText(db.userDao().loadUserUsername(1));
+            }
+
+            if(db.userDao().loadAvanzamentoPokedex(1)!=null){
+                int progress = db.userDao().loadAvanzamentoPokedex(1).intValue();
+                this.avanzamentoPokedex.setText(progress + "%");
+                this.pbAvanzamento.setMax(100);
+                this.pbAvanzamento.setMin(0);
+                this.pbAvanzamento.setProgress(progress);
+            }
+
+
         }
     }
 }

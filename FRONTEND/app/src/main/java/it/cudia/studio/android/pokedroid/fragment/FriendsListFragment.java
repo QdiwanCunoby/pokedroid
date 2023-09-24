@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,12 +15,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Vector;
 
 import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.adapter.FriendshipCardRecycleViewAdapter;
-import it.cudia.studio.android.pokedroid.adapter.PokeCardRecyclerViewAdapter;
+import it.cudia.studio.android.pokedroid.model.AppDatabase;
+import it.cudia.studio.android.pokedroid.model.Friend;
+import it.cudia.studio.android.pokedroid.model.Pokemon;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
+import it.cudia.studio.android.pokedroid.singleton.SingletonVolley;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +43,8 @@ import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
  * create an instance of this fragment.
  */
 public class FriendsListFragment extends Fragment {
+
+    private static final String TAG = "FriendsListFragment";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -70,6 +86,8 @@ public class FriendsListFragment extends Fragment {
         }
 
         setHasOptionsMenu(true);
+        RequestQueue queue = SingletonVolley.getInstance(getActivity().getApplicationContext()).
+                getRequestQueue();
     }
 
     @Override
@@ -86,12 +104,12 @@ public class FriendsListFragment extends Fragment {
                 NavHostFragment.findNavController(FriendsListFragment.this).navigate(R.id.action_friendsListFragment_to_sendFrindshipRequestFragment);
             }
         });
-        String[] data = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewListaFriend);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        FriendshipCardRecycleViewAdapter adapter = new FriendshipCardRecycleViewAdapter(getContext(),data);
-        recyclerView.setAdapter(adapter);
+        Thread t = new Thread(new GetListFriend(recyclerView));
+        t.start();
+        //FriendshipCardRecycleViewAdapter adapter = new FriendshipCardRecycleViewAdapter(getContext(),data);
+        //recyclerView.setAdapter(adapter);
 
         return view;
     }
@@ -111,4 +129,65 @@ public class FriendsListFragment extends Fragment {
             }
         });
     }
+
+
+    public class GetListFriend implements Runnable{
+        RecyclerView recyclerView;
+        GetListFriend(RecyclerView recyclerView){
+            this.recyclerView = recyclerView;
+        }
+        public void run() {
+            Vector<Friend> data = new Vector<Friend>();
+            AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
+
+            if(db.userDao().loadUserEmail(1)!=null){
+                String url = getResources().getString(R.string.base_url)+"AmiciziaServlet?username="+db.userDao().loadUserUsername(1);
+
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+
+                                JSONArray jsonArrayObject = null;
+                                try {
+                                    jsonArrayObject = (JSONArray) response.getJSONArray("infoFriendList");
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+
+                                int i = 0;
+
+                                while(i < response.length()){
+
+                                    JSONObject jsonObject = (JSONObject) jsonArrayObject.opt(i);
+
+                                    try {
+                                        data.add(new Friend(jsonObject.getString("username"),jsonObject.getDouble("completamentoPokedex")));
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+
+                                    i++;
+                                }
+                                recyclerView.setHasFixedSize(true);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                                FriendshipCardRecycleViewAdapter adapter = new FriendshipCardRecycleViewAdapter(getContext(),data);
+                                recyclerView.setAdapter(adapter);
+
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                            }
+                        });
+
+                SingletonVolley.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+            }
+        }
+    }
 }
+
+
+

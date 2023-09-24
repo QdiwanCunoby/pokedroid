@@ -93,8 +93,8 @@ public class RiscattaPokemonFragment extends Fragment {
         // Inflate the layout for this fragment
         requireActivity().getSupportFragmentManager();
         View view =  inflater.inflate(R.layout.fragment_riscatta_pokemon, container, false);
-        etCodicePokemon = view.findViewById(R.id.etCodicePokemon);
-        btRiscattaPokemon = view.findViewById(R.id.btRiscattaPokemon);
+        etCodicePokemon = view.findViewById(R.id.etEmailAmico);
+        btRiscattaPokemon = view.findViewById(R.id.btSendFrinedshipRequest);
         btQrRiscattaPokemon = view.findViewById(R.id.btQrScannerFriendship);
         CustomDialog dialog = new CustomDialog();
         btRiscattaPokemon.setOnClickListener(new View.OnClickListener() {

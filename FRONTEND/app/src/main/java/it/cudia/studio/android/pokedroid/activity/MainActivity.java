@@ -3,22 +3,13 @@ package it.cudia.studio.android.pokedroid.activity;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.room.Room;
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
-import android.os.Binder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -32,10 +23,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Objects;
-import java.util.logging.LogManager;
 
 import it.cudia.studio.android.pokedroid.R;
-import it.cudia.studio.android.pokedroid.fragment.RegistrationFragment;
+import it.cudia.studio.android.pokedroid.fragment.ProfileFragment;
 import it.cudia.studio.android.pokedroid.fragment.RiscattaPokemonFragment;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
 import it.cudia.studio.android.pokedroid.model.AppDatabase;
@@ -47,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     PokedroidToolbar pokedroidToolbar;
+    ImageView imgProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +48,15 @@ public class MainActivity extends AppCompatActivity {
         PokedroidToolbar.setActivity(MainActivity.this);
         pokedroidToolbar.setActionBar(Objects.requireNonNull(getSupportActionBar()));
         PokedroidToolbar.setInflater(getMenuInflater());
-
+        invalidateOptionsMenu();
         Thread t = new Thread(new MyRunnable());
         t.start();
-
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
         // if the intentResult is null then
@@ -77,18 +67,41 @@ public class MainActivity extends AppCompatActivity {
             }else if(intentResult.getContents().length() == MyFirebaseInstanceIDService.getToken(getBaseContext()).length()){
                 Thread t = new Thread(new MainActivity.SendNotiphicationFriendshipRunnable(intentResult.getContents()));
                 t.start();
-            } else {
+            }else if(intentResult.getContents().length() == String.valueOf("MEMTLXGOYAGG").length()){
                 // if the intentResult is not null we'll set
                 // the content and format of scan message
                 Log.d(TAG, "onActivityResult() called with QR: " + intentResult.getContents());
                 RiscattaPokemonFragment riscattaPokemonFragment = new RiscattaPokemonFragment();
-               /* Bundle bundle = new Bundle();
-                bundle.putString("QrText",);*/
+
                 Thread t = new Thread(new MainActivity.RetrivePokedexIdLocalDBUseQrRunnable(intentResult.getContents()));
                 t.start();
             }
+        }else if(data.getData() != null){
+            Thread t = new Thread(new SaveProfileImageRunnable(data.getData().toString()));
+            t.start();
         } else {
             super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d(TAG, "onNewIntent() called with: intent = [" + intent + "]");
+        CustomDialog dialog = new CustomDialog();
+        if(intent.getExtras() != null){
+            if(intent.getStringExtra("methodName").equals("acceptFriend")){
+                Log.d(TAG, "acceptFriend");
+                dialog.setDialogRight(" hai accettato la richiesta di amicizia!");
+                dialog.show(getSupportFragmentManager(),"CustomDialog");
+
+                Thread t = new Thread(new sendFriendshipRequest(intent.getStringExtra("usernameMandante")));
+                t.start();
+            } else if (intent.getStringExtra("methodName").equals("discardFriend")) {
+                Log.d(TAG, "discardFriend");
+                dialog.setDialogWarning("non hai accettato la richiesta di amicizia!");
+                dialog.show(getSupportFragmentManager(),"CustomDialog");
+            }
         }
     }
 
@@ -116,6 +129,50 @@ public class MainActivity extends AppCompatActivity {
 
                 db.userDao().getAll();
 
+        }
+    }
+
+    public class sendFriendshipRequest implements Runnable {
+        //String usernameRiceventeRichiesta;
+        String usernameMandanteRichiesta;
+        public sendFriendshipRequest( String usernameMandanteRichiesta ) {
+            this.usernameMandanteRichiesta = usernameMandanteRichiesta;
+        }
+
+        public void run() {
+
+            AppDatabase db = AppDatabase.getInstance(MainActivity.this);
+            Log.d(TAG, "run() called");
+            if(db.userDao().loadUserUsername(1) != null) {
+                String json_string = "{\n" +
+                        "    mandante : '" + usernameMandanteRichiesta + "',\n" +
+                        "    ricevente : '" + db.userDao().loadUserUsername(1) + "'\n" +
+                        "}";
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(json_string); // make a json string in a json object
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+                String url = getResources().getString(R.string.base_url)+"AmiciziaServlet";
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if(response.toString().equals("accept friendship")){
+                            Log.d(TAG, "onResponse() called with: response = [" + response.toString() + "]");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+                // send request with a instance of singleton VOLLEY network android tool
+                SingletonVolley.getInstance(getBaseContext()).addToRequestQueue(jsonObjectRequest);
+            }
         }
     }
 
@@ -220,6 +277,28 @@ public class MainActivity extends AppCompatActivity {
                 // send request with a instance of singleton VOLLEY network android tool
                 SingletonVolley.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
             }
+        }
+    }
+
+    public class SaveProfileImageRunnable implements Runnable{
+
+        String uri_img_profile;
+
+        SaveProfileImageRunnable( String uri_img_profile){
+            this.uri_img_profile = uri_img_profile;
+        }
+
+        @Override
+        public void run() {
+            AppDatabase db = AppDatabase.getInstance(getApplicationContext());
+
+            db.userDao().updateImgProfile(this.uri_img_profile);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            ProfileFragment profilo = new ProfileFragment();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.profileFragmentContainer, profilo)
+                    .commit();
         }
     }
 }

@@ -18,7 +18,7 @@
             app:destination="@id/riscattaPokemonFragment" />
         <action
             android:id="@+id/action_listaPokemonFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragmentContainer" />
     </fragment>
     <fragment
         android:id="@+id/pokemonStatisticsFragment"
@@ -30,7 +30,7 @@
             app:destination="@id/listaPokemonFragment" />
         <action
             android:id="@+id/action_pokemonStatisticsFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragmentContainer" />
     </fragment>
     <fragment
         android:id="@+id/riscattaPokemonFragment"
@@ -42,10 +42,10 @@
             app:destination="@id/listaPokemonFragment" />
         <action
             android:id="@+id/action_riscattaPokemonFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragmentContainer" />
     </fragment>
     <fragment
-        android:id="@+id/profileFragment"
+        android:id="@+id/profileFragmentContainer"
         android:name="it.cudia.studio.android.pokedroid.fragment.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
@@ -72,7 +72,7 @@
         tools:layout="@layout/fragment_friends_list" >
         <action
             android:id="@+id/action_friendsListFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragmentContainer" />
         <action
             android:id="@+id/action_friendsListFragment_to_sendFrindshipRequestFragment"
             app:destination="@id/sendFrindshipRequestFragment" />
@@ -87,7 +87,7 @@
             app:destination="@id/friendsListFragment" />
         <action
             android:id="@+id/action_sendFrindshipRequestFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragmentContainer" />
     </fragment>
     <fragment
         android:id="@+id/resetPasswordFragment"
@@ -96,6 +96,6 @@
         tools:layout="@layout/fragment_reset_password" >
         <action
             android:id="@+id/action_resetPasswordFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragmentContainer" />
     </fragment>
 </navigation>

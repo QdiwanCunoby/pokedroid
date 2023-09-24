@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -26,6 +27,7 @@ import org.json.JSONObject;
 
 import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.activity.CaptureActivityPortrait;
+import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
 import it.cudia.studio.android.pokedroid.model.AppDatabase;
 import it.cudia.studio.android.pokedroid.services.MyFirebaseInstanceIDService;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
@@ -48,6 +50,10 @@ public class SendFrindshipRequestFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    EditText etCodiceAmico;
+    EditText etEmailAmico;
+    Button btSendFrinedshipRequest;
 
     public SendFrindshipRequestFragment() {
         // Required empty public constructor
@@ -88,6 +94,32 @@ public class SendFrindshipRequestFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_send_frindship_request, container, false);
 
+        etCodiceAmico = view.findViewById(R.id.etCodiceAmico);
+        etEmailAmico = view.findViewById(R.id.etEmailAmico);
+        btSendFrinedshipRequest = view.findViewById(R.id.btSendFrinedshipRequest);
+
+        btSendFrinedshipRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomDialog dialog = new CustomDialog();
+                if(etCodiceAmico.getText().toString().equals("") && etEmailAmico.getText().toString().equals("")){
+                    dialog.setDialogWrong("riempire i campi di testo!");
+                    dialog.show(getFragmentManager(),"CustomDialog");
+                }else if(etCodiceAmico.getText().toString().equals("")){
+                    Log.d(TAG, "onClick() called inner if with :"+ etCodiceAmico.getText().toString());
+                    dialog.setDialogWrong("il campo codice amico e' vuoto!");
+                    dialog.show(getFragmentManager(),"CustomDialog");
+                }else if(etEmailAmico.getText().toString().equals("")){
+                    Log.d(TAG, "onClick() called inner if with :"+ etCodiceAmico.getText().toString());
+                    dialog.setDialogWrong("il campo per email amico e' vuoto!");
+                    dialog.show(getFragmentManager(),"CustomDialog");
+                }else{
+                    //Thread t = new Thread( new SendFrindshipRequestFragment().RetrivePokedexIdLocalDBRunnable());
+                    //t.start();
+                }
+            }
+        });
+
         Button btQrRiscattaPokemon = view.findViewById(R.id.btQrScannerFriendship);
         btQrRiscattaPokemon.setOnClickListener(new View.OnClickListener() {
 
@@ -106,20 +138,6 @@ public class SendFrindshipRequestFragment extends Fragment {
         });
         return view;
     }
-
-    /*@Override
-    /*public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onCreateView() called with: inflater PASSAGGIO");
-        if(getArguments()!=null){
-            Log.d(TAG, "onCreateView() called with: inflater PASSAGGIO =" + getArguments());
-            if(getArguments().getString("QrText")!=null){
-                Log.d(TAG, "onCreateView() called with: inflater PASSAGGIO =" + getArguments().getString("QrText"));
-                Thread t = new Thread(new SendNotiphicationFriendshipRunnable(getArguments().getString("QrText")));
-                t.start();
-            }
-        }
-    }*/
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){

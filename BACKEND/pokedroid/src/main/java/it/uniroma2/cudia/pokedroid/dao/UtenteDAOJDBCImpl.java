@@ -89,9 +89,11 @@ public class UtenteDAOJDBCImpl implements UtenteDAO {
 			ProspettoUtenteDTO prospettoUtente = null;
 			if (rset.next()) {
 				
-				String SEARCH_USER = "SELECT us.user_username, us.user_genere, us.user_id_pokedex, us.user_codice_amico, p.poke_completamento "
-						+ "FROM utente AS ut INNER JOIN utenza AS u  ON ut.uten_id = u.uten_id , pokedex AS p, `user` AS us "
-						+ "WHERE ut.uten_mail = '"+ email + "' AND ut.uten_password = '"+password+"' AND p.poke_id = us.user_id_pokedex";
+				String SEARCH_USER = "SELECT us.user_username, us.user_genere, us.user_id_pokedex, us.user_codice_amico, p.poke_completamento\r\n"
+						+ "	FROM utente AS ut JOIN utenza AS u  ON ut.uten_id = u.uten_id \r\n"
+						+ "		JOIN `user` AS us ON u.user_id = us.user_id\r\n"
+						+ "		JOIN pokedex AS p ON p.poke_id = us.user_id_pokedex\r\n"
+						+ "		WHERE (ut.uten_mail ='"+ email + "' AND ut.uten_password = '"+password+"')";
 				
 				rset = stmt.executeQuery(SEARCH_USER);
 				

@@ -76,7 +76,6 @@ public final class PokedroidToolbar {
         this.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("gggiogggio", "onClick() called with: v = [" + v + "]");
                 activity.getSupportFragmentManager().popBackStack();
             }
         });
@@ -111,7 +110,9 @@ public final class PokedroidToolbar {
     public static void enableProfileIcon() {
         getInflater().inflate(R.menu.menu_profile, menu);
         MenuItem profileIcon = menu.findItem(R.id.menu_profile);
+
     }
+
 
     public static void disableProfileIcon() {
         profileIcon = menu.findItem(R.id.menu_profile);

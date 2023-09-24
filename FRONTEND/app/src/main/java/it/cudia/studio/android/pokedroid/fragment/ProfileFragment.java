@@ -2,6 +2,7 @@ package it.cudia.studio.android.pokedroid.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -24,6 +27,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
+import it.cudia.studio.android.pokedroid.model.AppDatabase;
 import it.cudia.studio.android.pokedroid.services.MyFirebaseInstanceIDService;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 
@@ -46,6 +50,8 @@ public class ProfileFragment extends Fragment {
     TextView logout;
     CustomDialog dialog;
     ImageView imgQRcodeFrindship;
+    ImageView imgProfile;
+    FloatingActionButton floatingActionButtonProfileImage;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -86,6 +92,22 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        imgProfile = view.findViewById(R.id.imgProfile);
+        floatingActionButtonProfileImage = view.findViewById(R.id.floatingActionButtonProgileImage);
+        Thread t = new Thread(new RetriveImgProfileLocalDBRunnable());
+        t.start();
+
+        floatingActionButtonProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImagePicker.with(getActivity())
+                        .crop()	    			//Crop image(Optional), Check Customization for more option
+                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
+                        .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                        .start();
+            }
+        });
+
         Button changePassword = view.findViewById(R.id.btCambioPassword);
 
         logout = view.findViewById(R.id.tvLogout);
@@ -110,7 +132,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        Button friendList = view.findViewById(R.id.btRiscattaPokemon);
+        Button friendList = view.findViewById(R.id.btSendFrinedshipRequest);
 
         friendList.setOnClickListener( new View.OnClickListener(){
 
@@ -129,7 +151,22 @@ public class ProfileFragment extends Fragment {
             throw new RuntimeException(e);
         }
 
+
+        Thread t_setUserData = new Thread(new ProfileFragment.RetriveDataUserLocalDBRunnable(view.findViewById(R.id.tvUsername),
+                view.findViewById(R.id.tvEmail),
+                view.findViewById(R.id.tvPercentualeAvanzamentoProfilo)));
+        t_setUserData.start();
+
         return view;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("message", "This is my message to be reloaded");
+        super.onSaveInstanceState(outState);
+        Thread t = new Thread(new RetriveImgProfileLocalDBRunnable());
+        t.start();
     }
 
     Bitmap encodeAsBitmap(String str) throws WriterException {
@@ -151,10 +188,58 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         PokedroidToolbar.enableBackNavigation();
         PokedroidToolbar.disableProfileIcon();
+    }
+
+    public class RetriveImgProfileLocalDBRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            retriveProgileImage();
+        }
+
+        void retriveProgileImage(){
+            AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
+            if(db.userDao().loadUserProfileImage(1) != null){
+                imgProfile.setImageURI(Uri.parse(db.userDao().loadUserProfileImage(1)));
+            }
+        }
+    }
+    public class RetriveDataUserLocalDBRunnable implements Runnable {
+
+        TextView username;
+        TextView email;
+        TextView avanzamentoPokedex;
+
+        RetriveDataUserLocalDBRunnable(TextView username, TextView email , TextView avanzamentoPokedex) {
+            this.username = username;
+            this.email = email;
+            this.avanzamentoPokedex = avanzamentoPokedex;
+        }
+        public void run() {
+            AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
+
+            if(db.userDao().loadUserUsername(1)!=null){
+                this.username.setText(db.userDao().loadUserUsername(1));
+            }
+
+            if(db.userDao().loadAvanzamentoPokedex(1)!=null){
+                this.avanzamentoPokedex.setText(db.userDao().loadAvanzamentoPokedex(1).intValue() + "%");
+            }
+
+            if(db.userDao().loadUserEmail(1)!=null){
+                this.email.setText(db.userDao().loadUserEmail(1));
+            }
+
+        }
     }
 
 }

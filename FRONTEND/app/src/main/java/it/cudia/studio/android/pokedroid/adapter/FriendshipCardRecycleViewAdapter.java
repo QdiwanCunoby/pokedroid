@@ -11,15 +11,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Vector;
+
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.model.Friend;
+import it.cudia.studio.android.pokedroid.model.Pokemon;
 
 public class FriendshipCardRecycleViewAdapter extends RecyclerView.Adapter<FriendshipCardRecycleViewAdapter.ViewHolder>{
 
-    private String[] mData;
+    private Vector<Friend> mData;
 
     private LayoutInflater mInflater;
 
-    public FriendshipCardRecycleViewAdapter(Context context, String[] data){
+    public FriendshipCardRecycleViewAdapter(Context context, Vector<Friend> data){
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -33,12 +37,16 @@ public class FriendshipCardRecycleViewAdapter extends RecyclerView.Adapter<Frien
 
     @Override
     public void onBindViewHolder(@NonNull FriendshipCardRecycleViewAdapter.ViewHolder holder, int position) {
-
+        holder.friendUsername.setText(mData.get(position).getUsername());
+        holder.scoreFriendPokedexScore.setText(mData.get(position).getCompletamentoPokedex()+"%");
+        holder.friendProgressBar.setMin(0);
+        holder.friendProgressBar.setMax(100);
+        holder.friendProgressBar.setProgress(mData.get(position).getCompletamentoPokedex().intValue());
     }
 
     @Override
     public int getItemCount() {
-        return mData.length;
+        return mData.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder  {

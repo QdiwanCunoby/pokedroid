@@ -73,5 +73,5 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-messaging:23.2.1'
 
-
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
 }
