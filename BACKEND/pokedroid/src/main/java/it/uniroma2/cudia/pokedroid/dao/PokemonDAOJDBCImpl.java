@@ -97,14 +97,14 @@ public class PokemonDAOJDBCImpl implements PokemonDAO {
 		
 		pstmt.executeUpdate();
 		
-		conn.commit();
+		
 		
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
 			return -1;
 		}
-		
+		conn.commit();
 		return 1;
 		
 	}

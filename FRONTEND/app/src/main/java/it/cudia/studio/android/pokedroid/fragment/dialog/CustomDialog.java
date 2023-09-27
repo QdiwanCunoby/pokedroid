@@ -1,6 +1,7 @@
 package it.cudia.studio.android.pokedroid.fragment.dialog;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,10 +14,13 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.activity.AccessActivity;
 import it.cudia.studio.android.pokedroid.activity.MainActivity;
+import it.cudia.studio.android.pokedroid.fragment.ListaPokemonFragment;
+import it.cudia.studio.android.pokedroid.fragment.RiscattaPokemonFragment;
 import it.cudia.studio.android.pokedroid.model.AppDatabase;
 
 public class CustomDialog extends DialogFragment {
@@ -27,6 +31,8 @@ public class CustomDialog extends DialogFragment {
     TextView label;
     TextView content;
     String contenutoDialog = "";
+
+    FragmentManager fragmentManager;
 
     @Nullable
     @Override
@@ -43,7 +49,7 @@ public class CustomDialog extends DialogFragment {
             labelIcon.setImageResource(R.drawable.zubat_icon);
             label.setText("WRONG");
             content.setText(contenutoDialog);
-        }else if(typeDialog == type_dialog.RIGHT){
+        }else if(typeDialog == type_dialog.RIGHT || typeDialog == type_dialog.SUCCES_RISCATTA_POKEMON){
             labelIcon.setImageResource(R.drawable.pika_icon);
             label.setText("Succes");
             content.setText(contenutoDialog);
@@ -67,8 +73,22 @@ public class CustomDialog extends DialogFragment {
                     Thread t = new Thread(new DeleteUserSqlLiteRunnable());
                     t.start();
 
-                }
-                else{
+                } else if (typeDialog == type_dialog.SUCCES_RISCATTA_POKEMON) {
+                    /*TODO*/
+                    Thread t = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            RiscattaPokemonFragment riscattaPokemon = new RiscattaPokemonFragment();
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.riscattaPokemonFragment, riscattaPokemon)
+                                    .commit();
+                        }
+                    });
+                    t.start();
+                    Intent intent = new Intent(view.getContext(), MainActivity.class);
+                    startActivity(intent);
+                } else{
                     Log.d(TAG, "onClick! ok close dialog");
                     getDialog().dismiss();
                 }
@@ -86,6 +106,12 @@ public class CustomDialog extends DialogFragment {
 
     public void setDialogRight(String contenutoDialog){
         typeDialog = type_dialog.RIGHT;
+        this.contenutoDialog = contenutoDialog;
+    }
+
+    public void setDialogSuccessRiscattaPokemon(String contenutoDialog,FragmentManager fragmentManager){
+        typeDialog = type_dialog.SUCCES_RISCATTA_POKEMON;
+        this.fragmentManager = fragmentManager;
         this.contenutoDialog = contenutoDialog;
     }
 
@@ -119,5 +145,6 @@ enum type_dialog{
     WRONG,
     RIGHT,
     WARNING,
-    LOGOUT
+    LOGOUT,
+    SUCCES_RISCATTA_POKEMON
 }

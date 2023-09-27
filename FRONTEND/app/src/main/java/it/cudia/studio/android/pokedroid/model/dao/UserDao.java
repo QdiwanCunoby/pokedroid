@@ -33,6 +33,9 @@ public interface UserDao {
     @Query("SELECT pokedex_completamento FROM user WHERE uid = :userId")
     Double loadAvanzamentoPokedex(int userId);
 
+    @Query("UPDATE user SET pokedex_completamento = :avanzamento")
+    void UpdateAvanzamentoPokedex(int avanzamento);
+
     @Query("SELECT user_pokedex FROM user WHERE uid = :userId")
     int loadUserPokedex(int userId);
 

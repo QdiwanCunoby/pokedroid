@@ -10,7 +10,7 @@ import androidx.room.RoomDatabase;
 import it.cudia.studio.android.pokedroid.model.dao.UserDao;
 import it.cudia.studio.android.pokedroid.model.entity.User;
 
-@Database(entities = {User.class}, exportSchema = false, version = 2)
+@Database(entities = {User.class}, exportSchema = false, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String TAG = "AppDatabase";

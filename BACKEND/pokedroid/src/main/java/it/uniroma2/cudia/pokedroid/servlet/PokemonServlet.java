@@ -14,6 +14,9 @@ import org.json.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import it.uniroma2.cudia.pokedroid.dao.AvanzamentoDAO;
+import it.uniroma2.cudia.pokedroid.dao.AvanzamentoDAOJDBCImpl;
+import it.uniroma2.cudia.pokedroid.dao.PokedexDAO;
 import it.uniroma2.cudia.pokedroid.dao.PokedexDAOJDBCImpl;
 import it.uniroma2.cudia.pokedroid.dao.PokemonDAO;
 import it.uniroma2.cudia.pokedroid.dao.PokemonDAOJDBCImpl;
@@ -28,6 +31,8 @@ public class PokemonServlet extends HttpServlet {
 	private static final long serialVersionUID = 2935400352059799743L;
 	
 	private PokemonDAO daoPokemon;
+	private PokedexDAO daoPokedex;
+	private AvanzamentoDAO daoAvanzamento;
 	
 	public PokemonServlet() {
 		super();
@@ -44,6 +49,8 @@ public class PokemonServlet extends HttpServlet {
 		System.out.print("PokemonServlet. Opening DB connection...");
 		
 		daoPokemon = new PokemonDAOJDBCImpl(ip,port,dbName,userName,password);
+		daoPokedex = new PokedexDAOJDBCImpl(ip,port,dbName,userName,password);
+		daoAvanzamento = new AvanzamentoDAOJDBCImpl(ip,port,dbName,userName,password);
 		
 		System.out.println("DONE.");
 	}
@@ -87,6 +94,8 @@ public class PokemonServlet extends HttpServlet {
 		System.out.println("PokemonServlet. Invoking a doPost method.");
 		PrintWriter out = response.getWriter();
 		long idPokemon = 0;
+		JSONObject jsonObject = null;
+		double avanzamento = 0;
 		StringBuffer jb = new StringBuffer();
 		  String line = null;
 		  try {
@@ -97,7 +106,7 @@ public class PokemonServlet extends HttpServlet {
 
 		  try {
 			System.out.println(jb.toString());
-		    JSONObject jsonObject = new  JSONObject(jb.toString());
+		    jsonObject = new  JSONObject(jb.toString());
 			System.out.println(jb.toString());
 			System.out.println(jsonObject);
 		    idPokemon = daoPokemon.checkCodiceRiscattoPokemon(jsonObject.getString("codice"));
@@ -120,7 +129,16 @@ public class PokemonServlet extends HttpServlet {
 		
 		if(idPokemon != 0) {
 			
-			out.print("{ esito: 'true' }");
+			//out.print("{ esito: 'true' }");
+			try {
+				daoPokedex.updateAvanzamentoPokedex(jsonObject.getInt("idPokedex"));
+				avanzamento = daoAvanzamento.countPokemon(jsonObject.getInt("idPokedex"));
+			} catch (JSONException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String s = "{ esito: 'true', avanzamento:"+(int) avanzamento+" }";
+			out.print(s);
 			return;
 		}
 		out.print("{ esito: 'false' }");

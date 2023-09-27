@@ -97,8 +97,52 @@ public class ListaPokemonFragment extends Fragment {
 
         setHasOptionsMenu(true);
         invalidateOptionsMenu(getActivity());
+
         RequestQueue queue = SingletonVolley.getInstance(getActivity().getApplicationContext()).
                 getRequestQueue();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        PokedroidToolbar.disableBackNavigation();
+        //new Thread(new SaveAvanzamentoPokedexDBlocal()).start();
+    }
+
+    public class SaveAvanzamentoPokedexDBlocal implements  Runnable{
+
+        public SaveAvanzamentoPokedexDBlocal(){}
+        @Override
+        public void run() {
+            AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
+
+            int idPokedex = db.userDao().loadUserPokedex(1);
+            Log.d(TAG, "onResponse() called with: response idPokedex = [" + idPokedex + "]");
+            if(idPokedex!=0){
+                String urlGet = getResources().getString(R.string.base_url) + "PokedexServlet?pokedex="+db.userDao().loadUserPokedex(1);
+                JsonObjectRequest jsonObjectRequestGet = null;
+                jsonObjectRequestGet = new JsonObjectRequest
+                        (Request.Method.GET, urlGet, null, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    db.userDao().UpdateAvanzamentoPokedex(response.getInt("avanzamento"));
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO: Handle error
+                                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                            }
+                        });
+                if(jsonObjectRequestGet!=null)
+                    SingletonVolley.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequestGet);
+            }
+        }
     }
 
     @Override
@@ -242,6 +286,7 @@ public class ListaPokemonFragment extends Fragment {
             if(db.userDao().loadUserUsername(1)!=null){
                 this.username.setText(db.userDao().loadUserUsername(1));
             }
+
 
             if(db.userDao().loadAvanzamentoPokedex(1)!=null){
                 int progress = db.userDao().loadAvanzamentoPokedex(1).intValue();

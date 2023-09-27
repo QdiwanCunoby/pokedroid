@@ -1,14 +1,21 @@
 package it.cudia.studio.android.pokedroid.activity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -32,6 +39,7 @@ import it.cudia.studio.android.pokedroid.model.AppDatabase;
 import it.cudia.studio.android.pokedroid.services.MyFirebaseInstanceIDService;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 import it.cudia.studio.android.pokedroid.singleton.SingletonVolley;
+import kotlinx.coroutines.Dispatchers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,6 +59,18 @@ public class MainActivity extends AppCompatActivity {
         invalidateOptionsMenu();
         Thread t = new Thread(new MyRunnable());
         t.start();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
+        return super.onCreateView(name, context, attrs);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -128,6 +148,47 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "run() called");
 
                 db.userDao().getAll();
+
+        }
+    }
+
+    public class SaveAvanzamentoPokedexDBlocal implements Runnable{
+
+        public SaveAvanzamentoPokedexDBlocal(){}
+
+        @Override
+        public void run() {
+            AppDatabase db = AppDatabase.getInstance(getBaseContext());
+            if(db.userDao().loadUserUsername(1)!=null){
+                JsonObjectRequest jsonObjectRequestGet = null;
+                int idPokedex = db.userDao().loadUserPokedex(1);
+                Log.d(TAG, "onResponse() called with: response idPokedex = [" + idPokedex + "]");
+                if(idPokedex!=0){
+                    String urlGet = getResources().getString(R.string.base_url) + "PokedexServlet?pokedex="+db.userDao().loadUserPokedex(1);
+
+                    jsonObjectRequestGet = new JsonObjectRequest
+                            (Request.Method.GET, urlGet, null, new Response.Listener<JSONObject>() {
+
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        db.userDao().UpdateAvanzamentoPokedex(response.getInt("avanzamento"));
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // TODO: Handle error
+                                    Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                                }
+                            });
+
+                    SingletonVolley.getInstance(getBaseContext()).addToRequestQueue(jsonObjectRequestGet);
+                }
+            }
+            
 
         }
     }

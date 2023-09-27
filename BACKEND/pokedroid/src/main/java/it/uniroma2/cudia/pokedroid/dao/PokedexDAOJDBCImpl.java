@@ -72,6 +72,70 @@ public class PokedexDAOJDBCImpl implements PokedexDAO {
 		return -1;
 	}
 	
+	public double getAvanzamento(int idPokedex) throws SQLException {
+		
+		String SQL_SELECT = "SELECT poke_completamento FROM pokedex WHERE poke_id="+idPokedex;
+		ResultSet affectedRows = null;
+		conn.setAutoCommit(false);
+		
+		try {
+			
+			PreparedStatement pstmt = conn.prepareStatement(SQL_SELECT);
+			affectedRows = pstmt.executeQuery();
+			
+			if(affectedRows.next()) {
+				double avanzamento = affectedRows.getDouble(1);
+				conn.commit();
+				return avanzamento;
+			}
+			
+		} catch (SQLException e) {
+		
+			conn.rollback();
+			e.printStackTrace();
+			return -1;
+		
+		}
+		return 0;
+	}
+	
+	public int updateAvanzamentoPokedex(int idPokedex) throws SQLException {
+		conn.setAutoCommit(false);
+		String SQL_UPDATE ="UPDATE pokedex SET poke_completamento = "
+				+ "(SELECT COUNT(*) FROM avanzamento AS a WHERE a.pokedex_id = "+ idPokedex +") "
+				+ "WHERE poke_id = " + idPokedex;
+		
+		int affectedRows;
+		ResultSet affectedRows2;
+		PreparedStatement pstmt = conn.prepareStatement(SQL_UPDATE);
+		String SQL_COUNT = "SELECT COUNT(*) FROM avanzamento AS a WHERE a.pokedex_id = "+idPokedex;
+		
+		int numeroPokemon = -1;
+		
+		
+		try {	
+			
+			affectedRows = pstmt.executeUpdate();
+			conn.commit();
+			
+			pstmt = conn.prepareStatement(SQL_COUNT);
+			affectedRows2 = pstmt.executeQuery();
+			
+			if(affectedRows2.next()) {
+				numeroPokemon = affectedRows2.getInt(1);
+			}
+		} catch (SQLException e) {
+			
+			conn.rollback();
+			e.printStackTrace();
+			return -1;
+		}	
+	
+	
+		conn.commit();
+		return numeroPokemon;
+	}
+	
 	public void closeConnection() {
 		try {
 			conn.close();

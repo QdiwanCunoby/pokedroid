@@ -4,8 +4,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +28,10 @@ import com.google.zxing.integration.android.IntentIntegrator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.activity.CaptureActivityPortrait;
@@ -53,6 +61,8 @@ public class RiscattaPokemonFragment extends Fragment {
     EditText etCodicePokemon;
     Button btRiscattaPokemon;
     Button btQrRiscattaPokemon;
+
+
 
     public RiscattaPokemonFragment() {
         // Required empty public constructor
@@ -108,6 +118,7 @@ public class RiscattaPokemonFragment extends Fragment {
                 }else{
                     Thread t = new Thread( new RetrivePokedexIdLocalDBRunnable());
                     t.start();
+
                 }
             }
         });
@@ -143,6 +154,8 @@ public class RiscattaPokemonFragment extends Fragment {
                 Log.d(TAG, "onCreateView() called with: inflater PASSAGGIO =" + getArguments().getString("QrText"));
                 Thread t = new Thread(new RetrivePokedexIdLocalDBUseQrRunnable(getArguments().getString("QrText")));
                 t.start();
+
+
             }
         }
     }
@@ -163,9 +176,15 @@ public class RiscattaPokemonFragment extends Fragment {
 
     public class RetrivePokedexIdLocalDBRunnable implements Runnable {
 
+        Handler handler;
         public RetrivePokedexIdLocalDBRunnable() { }
 
+
+        @Override
         public void run() {
+
+            LooperThread looperThread = new LooperThread();
+            looperThread.start();
             Log.d(TAG, "run() called");
             AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
 
@@ -185,6 +204,7 @@ public class RiscattaPokemonFragment extends Fragment {
                 }
 
                 String url = getResources().getString(R.string.base_url)+"PokemonServlet";
+
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                         (Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
                             @Override
@@ -194,10 +214,14 @@ public class RiscattaPokemonFragment extends Fragment {
                                 try {
                                     if(response.getString("esito").equals("false")){
                                         dialog.setDialogWrong("il codice di riscatto non e' corretto!");
+
                                     }else if(response.getString("esito").equals("already inserted")){
                                         dialog.setDialogWarning("il pokemon e' gia' stato riscattato!");
+
                                     }else if(response.getString("esito").equals("true")){
-                                        dialog.setDialogRight("nuovo pokemon riscattato con successo!");
+                                        dialog.setDialogSuccessRiscattaPokemon("nuovo pokemon riscattato con successo!",getParentFragmentManager());
+                                        looperThread.handler.post(new SaveAvanzamentoPokedexDBlocal());
+
                                     }else{
                                         dialog.setDialogWrong("qualcosa e' andato storto, si e' verificato un disservizio!");
                                     }
@@ -213,10 +237,76 @@ public class RiscattaPokemonFragment extends Fragment {
                                 Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
                             }
                         });
+
                 // send request with a instance of singleton VOLLEY network android tool
                 SingletonVolley.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+
             }
 
+
+        }
+    }
+
+   public class LooperThread extends Thread{
+       public Handler handler;
+
+       @Override
+       public void run() {
+           Looper.prepare();
+           handler = new Handler();
+           Looper.loop();
+       }
+   }
+
+    public  class SaveAvanzamentoPokedexDBlocal implements  Runnable{
+
+        public SaveAvanzamentoPokedexDBlocal(){}
+        @Override
+        public void run() {
+
+            AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
+
+            int idPokedex = db.userDao().loadUserPokedex(1);
+            Log.d(TAG, "onResponse() called with: response idPokedex = [" + idPokedex + "]");
+            if(idPokedex!=0){
+                String urlGet = getResources().getString(R.string.base_url) + "PokedexServlet?pokedex="+db.userDao().loadUserPokedex(1);
+                JsonObjectRequest jsonObjectRequestGet = null;
+                jsonObjectRequestGet = new JsonObjectRequest
+                        (Request.Method.GET, urlGet, null, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+
+                                    new Thread(new MakeQuery(response.getInt("avanzamento"))).start();
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO: Handle error
+                                Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
+                            }
+                        });
+                if(jsonObjectRequestGet!=null)
+                    SingletonVolley.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequestGet);
+            }
+        }
+    }
+
+    public class MakeQuery implements Runnable{
+
+        int v;
+        MakeQuery(int v){
+            this.v = v;
+        }
+
+        @Override
+        public void run() {
+            AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
+            db.userDao().UpdateAvanzamentoPokedex(this.v);
 
         }
     }
@@ -231,7 +321,8 @@ public class RiscattaPokemonFragment extends Fragment {
         public void run() {
             Log.d(TAG, "run() called");
             AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
-
+            LooperThread looperThread = new LooperThread();
+            looperThread.start();
             String json_string = null;
             if(db.userDao().loadUserUsername(1)!=null) {
 
@@ -259,9 +350,13 @@ public class RiscattaPokemonFragment extends Fragment {
                                         dialog.setDialogWrong("il codice di riscatto non e' corretto!");
                                     }else if(response.getString("esito").equals("already inserted")){
                                         dialog.setDialogWarning("il pokemon e' gia' stato riscattato!");
+
                                     }else if(response.getString("esito").equals("true")){
-                                        dialog.setDialogRight("nuovo pokemon riscattato con successo!");
-                                    }else{
+                                        dialog.setDialogSuccessRiscattaPokemon("nuovo pokemon riscattato con successo!",getParentFragmentManager());
+
+                                        looperThread.handler.post(new SaveAvanzamentoPokedexDBlocal());
+
+                                    }else {
                                         dialog.setDialogWrong("qualcosa e' andato storto, si e' verificato un disservizio!");
                                     }
                                 } catch (JSONException e) {

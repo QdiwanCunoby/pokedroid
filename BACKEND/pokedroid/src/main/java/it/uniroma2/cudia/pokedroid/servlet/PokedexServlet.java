@@ -39,7 +39,7 @@ public class PokedexServlet extends HttpServlet {
 		String userName = getInitParameter("userName");
 		String password = getInitParameter("password");
 
-		System.out.print("UserServlet. Opening DB connection...");
+		System.out.print("PokedexServlet. Opening DB connection...");
 
 		dao = new PokedexDAOJDBCImpl(ip, port, dbName, userName, password);
 
@@ -48,7 +48,7 @@ public class PokedexServlet extends HttpServlet {
 
 	@Override
 	public void destroy() {
-		System.out.print("UserServlet. Closing DB connection...");
+		System.out.print("PokedexServlet. Closing DB connection...");
 		dao.closeConnection();
 		System.out.println("DONE.");
 	}
@@ -72,6 +72,26 @@ public class PokedexServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return;
+	}
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		System.out.println("PokedexServlet. Invoking a doGet method...");
+		
+		PrintWriter out = response.getWriter();
+		double avanzamento=0;
+		
+		try {
+			avanzamento=dao.getAvanzamento(Integer.valueOf(request.getParameter("pokedex")));
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+		}
+		
+		String jsonString = "{avanzamento:"+(int)avanzamento+"}";
+		
+		out.write(jsonString);
 		
 		return;
 	}
