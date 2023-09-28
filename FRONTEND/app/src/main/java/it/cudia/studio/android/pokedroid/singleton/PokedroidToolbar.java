@@ -76,7 +76,12 @@ public final class PokedroidToolbar {
         this.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (activity.getSupportFragmentManager().getBackStackEntryCount() > 0){
+                    boolean done = activity.getSupportFragmentManager().popBackStackImmediate();
+                }
+                activity.getSupportFragmentManager().executePendingTransactions();
                 activity.getSupportFragmentManager().popBackStack();
+
             }
         });
     }

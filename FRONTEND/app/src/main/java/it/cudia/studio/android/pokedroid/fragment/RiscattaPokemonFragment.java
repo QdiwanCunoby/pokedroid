@@ -306,9 +306,17 @@ public class RiscattaPokemonFragment extends Fragment {
         @Override
         public void run() {
             AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
-            db.userDao().UpdateAvanzamentoPokedex(this.v);
-
+            db.userDao().UpdateAvanzamentoPokedex((int)calcolaPercentuale(this.v,152));
         }
+    }
+
+    public double calcolaPercentuale(double numero, double totale) {
+        if (totale == 0) {
+            throw new IllegalArgumentException("Il totale non può essere zero.");
+        }
+
+        double percentuale = (numero / totale) * 100;
+        return percentuale;
     }
 
     public class RetrivePokedexIdLocalDBUseQrRunnable implements Runnable {

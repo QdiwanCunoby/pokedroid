@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -100,6 +101,7 @@ public class ListaPokemonFragment extends Fragment {
 
         RequestQueue queue = SingletonVolley.getInstance(getActivity().getApplicationContext()).
                 getRequestQueue();
+
     }
 
     @Override
@@ -108,6 +110,8 @@ public class ListaPokemonFragment extends Fragment {
         PokedroidToolbar.disableBackNavigation();
         //new Thread(new SaveAvanzamentoPokedexDBlocal()).start();
     }
+
+
 
     public class SaveAvanzamentoPokedexDBlocal implements  Runnable{
 
@@ -131,6 +135,7 @@ public class ListaPokemonFragment extends Fragment {
                                 } catch (JSONException e) {
                                     throw new RuntimeException(e);
                                 }
+
                             }
                         }, new Response.ErrorListener() {
                             @Override
@@ -150,6 +155,7 @@ public class ListaPokemonFragment extends Fragment {
                              Bundle savedInstanceState) {
 
        View view = inflater.inflate(R.layout.fragment_lista_pokemon, container, false);
+
        PokedroidToolbar.disableBackNavigation();
        FloatingActionButton addPokemon = view.findViewById(R.id.addPokemon);
        LinearLayout lyUserInfoStat = view.findViewById(R.id.lyUserInfoStat);
@@ -160,7 +166,9 @@ public class ListaPokemonFragment extends Fragment {
                 NavHostFragment.findNavController(ListaPokemonFragment.this).navigate(R.id.action_listaPokemonFragment_to_riscattaPokemonFragment);
             }
         });
-
+        /*ListaPokemonFragment home = new ListaPokemonFragment();
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        manager.beginTransaction().add(R.id.fgListaPokemon, home).commit();*/
         // data to populate the RecyclerView with
 
         Thread t = new Thread(new RetrivePasswordAndEmailLocalDBRunnable(view.findViewById(R.id.recyclerViewListaPokemon)));
@@ -290,10 +298,19 @@ public class ListaPokemonFragment extends Fragment {
 
             if(db.userDao().loadAvanzamentoPokedex(1)!=null){
                 int progress = db.userDao().loadAvanzamentoPokedex(1).intValue();
-                this.avanzamentoPokedex.setText(progress + "%");
-                this.pbAvanzamento.setMax(100);
-                this.pbAvanzamento.setMin(0);
-                this.pbAvanzamento.setProgress(progress);
+
+                getActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        avanzamentoPokedex.setText(progress + "%");
+                        pbAvanzamento.setMax(100);
+                        pbAvanzamento.setMin(0);
+                        pbAvanzamento.setProgress(progress);
+                    }
+                });
+
             }
 
 

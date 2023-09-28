@@ -214,6 +214,8 @@ public class PokemonStatisticsFragment extends Fragment {
 
         mChart = (RadarChart) v.findViewById(R.id.radarChart);
 
+        mChart.setRotationEnabled(false);
+
         XAxis xAxis = mChart.getXAxis();
         xAxis.setXOffset(0f);
         xAxis.setYOffset(0f);

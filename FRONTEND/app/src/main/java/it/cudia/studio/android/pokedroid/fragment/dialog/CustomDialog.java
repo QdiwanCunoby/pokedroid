@@ -74,20 +74,7 @@ public class CustomDialog extends DialogFragment {
                     t.start();
 
                 } else if (typeDialog == type_dialog.SUCCES_RISCATTA_POKEMON) {
-                    /*TODO*/
-                    Thread t = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            RiscattaPokemonFragment riscattaPokemon = new RiscattaPokemonFragment();
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.riscattaPokemonFragment, riscattaPokemon)
-                                    .commit();
-                        }
-                    });
-                    t.start();
-                    Intent intent = new Intent(view.getContext(), MainActivity.class);
-                    startActivity(intent);
+                    getDialog().dismiss();
                 } else{
                     Log.d(TAG, "onClick! ok close dialog");
                     getDialog().dismiss();
