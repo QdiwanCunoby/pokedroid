@@ -65,66 +65,67 @@ public class UtenzaServlet extends HttpServlet {
 		System.out.println("DONE.");
 	}
 	
-	
-	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("UtenteServlet. Invoking a doPost method.");
-		
-		PrintWriter out = response.getWriter();
-		
-		BufferedReader reader = request.getReader();
-	    String line;
-	    StringBuilder sb = new StringBuilder();
-	    
-	    while ((line = reader.readLine()) != null) {
-		      sb.append(line);
-		}
-	    
-	    String jsonDataRegistrationRequest =  sb.toString();
-		
-	    RegistrationRequest registrationRequest = null;
-		
 		try {
-			registrationRequest = RegistrationRequest.fromJSON(jsonDataRegistrationRequest);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			PrintWriter out = response.getWriter();
+			
+			BufferedReader reader = request.getReader();
+		    String line;
+		    StringBuilder sb = new StringBuilder();
+		    
+		    while ((line = reader.readLine()) != null) {
+			      sb.append(line);
+			}
+		    
+		    String jsonDataRegistrationRequest =  sb.toString();
+			
+		    RegistrationRequest registrationRequest = null;
+			
+			try {
+				registrationRequest = RegistrationRequest.fromJSON(jsonDataRegistrationRequest);
+			} catch (JSONException e) {
+				response.setStatus(400);// BAD-REQUEST-CODE
+				e.printStackTrace();
+				return;
+			}
+			
+			if( registrationRequest.getUtente() == null || registrationRequest.getUser() == null ) {
+				response.setStatus(400);// BAD-REQUEST-CODE
+				response.getWriter().append("utente or user are null");
+				return;
+			}
+			
+			try {	
+				Pokedex pokedex = new Pokedex(daoPokedex.createPokedex(),0);
+				registrationRequest.getUser().setIdPokedex(pokedex.getIdPokedex());
+				User user = daoUser.createUser(registrationRequest.getUser());
+				Utente utente = daoUtente.createUtente(registrationRequest.getUtente());
+				
+				if(daoUtenza.createUtenza(new Utenza(utente.getIdUtente(),user.getIdUser())) == -1) {
+					response.getWriter().append("false");
+				}
+				else {
+					ProspettoUtenteDTO prospettoUtente = new ProspettoUtenteDTO(user,utente,pokedex);
+					response.getWriter().append(prospettoUtente.toJsonString());
+				}
+			} catch (SQLException e) {
+				response.setStatus(599);//SQL-ERROR-CODE
+				e.printStackTrace();
+				return;
+			} catch (IOException e) {
+				response.setStatus(500);//SERVER-STATUS-CODE
+				e.printStackTrace();
+				return;
+			}
 		}
-		
-		if( registrationRequest.getUtente() == null || registrationRequest.getUser() == null ) {
-			response.setStatus(404);
-			response.getWriter().append("utente or user are null");
+		catch(Exception e) {
+			response.setStatus(500);//SERVER-STATUS-CODE
+			e.printStackTrace();
 			return;
 		}
-		
-		try {
-			
-			
-			Pokedex pokedex = new Pokedex(daoPokedex.createPokedex(),0);
-			registrationRequest.getUser().setIdPokedex(pokedex.getIdPokedex());
-			User user = daoUser.createUser(registrationRequest.getUser());
-			Utente utente = daoUtente.createUtente(registrationRequest.getUtente());
-			
-			if(daoUtenza.createUtenza(new Utenza(utente.getIdUtente(),user.getIdUser())) == -1) {
-				
-			
-				
-				response.getWriter().append("false");
-			}
-			else {
-				ProspettoUtenteDTO prospettoUtente = new ProspettoUtenteDTO(user,utente,pokedex);
-				response.getWriter().append(prospettoUtente.toJsonString());
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		return;
 	}
 

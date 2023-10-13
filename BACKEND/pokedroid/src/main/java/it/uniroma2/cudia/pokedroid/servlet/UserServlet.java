@@ -23,12 +23,8 @@ public class UserServlet extends HttpServlet {
 	
 	private UserDAO dao;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
 	public UserServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -45,61 +41,71 @@ public class UserServlet extends HttpServlet {
 
 		System.out.println("DONE.");
 	}
+	
+	/**
+	 *
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		System.out.println("UserServlet. Invoking a doPost method...");
+		try {
+			PrintWriter out = response.getWriter();
+			
+			BufferedReader reader = request.getReader();
+		    String line;
+		    StringBuilder sb = new StringBuilder();
+		    
+		    while ((line = reader.readLine()) != null) {
+			      sb.append(line);
+			}
+		    
+		    String jsonDataUtente =  sb.toString();
 
+			User user = null;
+			
+			try {
+				user = User.fromJSON(jsonDataUtente);
+			} catch (JSONException e) {
+				response.setStatus(400);//BAD-REQUEST-CODE
+				e.printStackTrace();
+				return;
+			}
+			
+			if( user.getUsername() == null || user.getCodiceAmico() == null || user.getIdPokedex() == 0 ) {
+				response.setStatus(400);
+				response.getWriter().append("username or codice amico or idPokedex are null");
+				return;
+			}
+			
+			try {
+				if(dao.createUser(user) == null ) {
+					response.getWriter().append("false");
+				}
+				else {
+					response.getWriter().append("true");
+				}
+			} catch (SQLException e) {
+				response.setStatus(499);//SQL-ERROR-CODE
+				e.printStackTrace();
+				return;
+			} catch (IOException e) {
+							}	
+		} 
+		catch(Exception e) {
+			response.setStatus(500);//SERVER-STATUS-CODE
+			e.printStackTrace();
+			return;
+ 
+		}
+		
+		return;
+	}
+	
 	@Override
 	public void destroy() {
 		System.out.print("UserServlet. Closing DB connection...");
 		dao.closeConnection();
 		System.out.println("DONE.");
-	}
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		System.out.println("UserServlet. Invoking a doPost method...");
-
-		PrintWriter out = response.getWriter();
-		
-		BufferedReader reader = request.getReader();
-	    String line;
-	    StringBuilder sb = new StringBuilder();
-	    
-	    while ((line = reader.readLine()) != null) {
-		      sb.append(line);
-		}
-	    
-	    String jsonDataUtente =  sb.toString();
-
-		User user = null;
-		
-		try {
-			user = User.fromJSON(jsonDataUtente);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		if( user.getUsername() == null || user.getCodiceAmico() == null || user.getIdPokedex() == 0 ) {
-			response.setStatus(404);
-			response.getWriter().append("username or codice amico or idPokedex are null");
-			return;
-		}
-		
-		try {
-			if(dao.createUser(user) == null ) {
-				response.getWriter().append("false");
-			}
-			else {
-				response.getWriter().append("true");
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return;
 	}
 
 }

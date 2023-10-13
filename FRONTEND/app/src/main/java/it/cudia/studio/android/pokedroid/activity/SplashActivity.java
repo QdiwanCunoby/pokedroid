@@ -23,7 +23,7 @@ public class SplashActivity extends AppCompatActivity {
         t.start();
     }
 
-    public class CheckIfUserAuthIsToRemoveRunnable implements Runnable {
+    public  class CheckIfUserAuthIsToRemoveRunnable implements Runnable {
 
         public CheckIfUserAuthIsToRemoveRunnable() {
 

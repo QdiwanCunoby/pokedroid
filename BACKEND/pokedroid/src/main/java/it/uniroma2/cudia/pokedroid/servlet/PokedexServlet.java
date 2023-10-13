@@ -23,12 +23,8 @@ public class PokedexServlet extends HttpServlet {
 	
 	private PokedexDAO dao;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
 	public PokedexServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -46,30 +42,24 @@ public class PokedexServlet extends HttpServlet {
 		System.out.println("DONE.");
 	}
 
-	@Override
-	public void destroy() {
-		System.out.print("PokedexServlet. Closing DB connection...");
-		dao.closeConnection();
-		System.out.println("DONE.");
-	}
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("PokedexServlet. Invoking a doPost method...");
 
 		PrintWriter out = response.getWriter();
 		
-		
-		try {
-			if(dao.createPokedex() == -1) {
-				
+		try{
+			if(dao.createPokedex() == -1) {	
 				response.getWriter().append("false");
 			}
 			else {
 				response.getWriter().append("true");
 			}
-		} catch (SQLException | IOException e) {
-			// TODO Auto-generated catch block
+		}catch (SQLException  e) {
+			response.setStatus(599);//SQL-ERROR-CODE 
+			e.printStackTrace();
+		}catch ( IOException e) {
+			response.setStatus(500);//SERVER-ERROR-CODE
 			e.printStackTrace();
 		}
 		
@@ -79,21 +69,44 @@ public class PokedexServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("PokedexServlet. Invoking a doGet method...");
-		
-		PrintWriter out = response.getWriter();
-		double avanzamento=0;
-		
 		try {
-			avanzamento=dao.getAvanzamento(Integer.valueOf(request.getParameter("pokedex")));
-		} catch (NumberFormatException | SQLException e) {
+			if(request.getParameter("pokedex")==null ) {
+				response.setStatus(400);//BAD-REQUEST-CODE
+				return;
+			}
+			
+			PrintWriter out = response.getWriter();
+			double avanzamento=0;
+			
+			try {
+				avanzamento=dao.getAvanzamento(Integer.valueOf(request.getParameter("pokedex")));
+			} catch (NumberFormatException e) {
+				response.setStatus(400);//BAD-REQUEST-CODE
+				e.printStackTrace();
+				return;
+			} catch (SQLException e) {
+				response.setStatus(599);//SQL-ERROR-CODE
+				e.printStackTrace();
+				return;
+			}  
+			
+			String jsonString = "{avanzamento:"+(int)avanzamento+"}";
+			
+			out.write(jsonString);
+		} 
+		catch(Exception e) {
+			response.setStatus(500);//SERVER-ERROR-CODE
 			e.printStackTrace();
 		}
 		
-		String jsonString = "{avanzamento:"+(int)avanzamento+"}";
-		
-		out.write(jsonString);
-		
 		return;
+	}
+	
+	@Override
+	public void destroy() {
+		System.out.print("PokedexServlet. Closing DB connection...");
+		dao.closeConnection();
+		System.out.println("DONE.");
 	}
 
 }

@@ -40,39 +40,58 @@ public class AvanzamentoServlet extends HttpServlet {
 		System.out.println("DONE.");
 	}
 	
-	@Override
-	public void destroy() {
-		System.out.print("AvanzamentoServlet. Closing DB connection...");
-		daoAvanzamento.closeConnection();
-		System.out.println("DONE.");
-	}
+
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		System.out.println("PokemonServlet. Invoking a doGet method.");
-		
-		PrintWriter out = response.getWriter();
-		
-		int numeroPokemon = -1;
-		Long idPokedex = new Long((request.getParameter("pokedex")));
-	
 		try {
+			if(request.getParameter("pokedex")==null ) {
+				response.setStatus(400);//BAD-REQUEST-CODE
+				return;
+			}
+			try {
+			    Double.parseDouble(request.getParameter("pokedex"));
+			} catch (NumberFormatException e) {
+				response.setStatus(400);//BAD-REQUEST-CODE
+				e.printStackTrace();
+				return;
+			}
 			
-			numeroPokemon = daoAvanzamento.countPokemon(idPokedex.longValue());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			PrintWriter out = response.getWriter();
+			
+			int numeroPokemon = -1;
+			Long idPokedex = new Long((request.getParameter("pokedex")));
+		
+			try {
+				
+				numeroPokemon = daoAvanzamento.countPokemon(idPokedex.longValue());
+			} catch (SQLException e) {
+				response.setStatus(599);//SQL-ERROR-CODE
+				e.printStackTrace();
+			}
+			
+			if(numeroPokemon==-1) {
+				response.getWriter().write(""+-1);
+				return;
+			}
+			
+			
+			response.getWriter().write(""+numeroPokemon);
+		} 
+		catch(Exception e){
 			e.printStackTrace();
+			response.setStatus(500);
 		}
-		
-		if(numeroPokemon==-1) {
-			response.getWriter().write(""+-1);
-			return;
-		}
-		
-		
-		response.getWriter().write(""+numeroPokemon);
 		
 		return;
+	}
+	
+	@Override
+	public void destroy() {
+		System.out.print("AvanzamentoServlet. Closing DB connection...");
+		daoAvanzamento.closeConnection();
+		System.out.println("DONE.");
 	}
 }

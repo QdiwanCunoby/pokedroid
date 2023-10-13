@@ -37,7 +37,7 @@ public class AmiciziaServlet extends HttpServlet {
 		String userName = getInitParameter("userName");
 		String password = getInitParameter("password");
 
-		System.out.print("UserServlet. Opening DB connection...");
+		System.out.print("AmiciziaServlet. Opening DB connection...");
 
 		dao = new AmiciziaDAOJDBCImpl(ip, port, dbName, userName, password);
 
@@ -47,18 +47,29 @@ public class AmiciziaServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("AmiciziaServlet. Invoking a doGet method.");
+		
+		if(request.getParameter("username")==null) {
+			response.setStatus(400);//BAD-REQUEST-CODE
+			return;
+		}
 		
 		PrintWriter out = response.getWriter();
+		
 		ListaFriendDTO listaFriendDTO = null;
 		
 		try {
 			listaFriendDTO = dao.getListaInfoFriend(request.getParameter("username"));
+			out.write(listaFriendDTO.toJsonString());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			response.setStatus(599);//SQL-ERROR-CODE
+			e.printStackTrace();
+		} catch (Exception e) {
+			response.setStatus(500);//SERVER-ERROR-CODE
 			e.printStackTrace();
 		}
 		
-		out.write(listaFriendDTO.toJsonString());
+		
 		
 		return;
 	}
@@ -78,21 +89,27 @@ public class AmiciziaServlet extends HttpServlet {
 		      sb.append(line);
 		}
 	    
-	    JSONObject jsonDataFriendship = new JSONObject(sb.toString());
-		
-		try {
-			if(dao.addFrindship(jsonDataFriendship.getString("mandante"), jsonDataFriendship.getString("ricevente")) == 1) {
-				out.write("accept friendship");
+	    try {
+	    	JSONObject jsonDataFriendship = new JSONObject(sb.toString());
+			
+			try {
+				if(dao.addFrindship(jsonDataFriendship.getString("mandante"), jsonDataFriendship.getString("ricevente")) == 1) {
+					out.write("accept friendship");
+				}
+			} catch (JSONException e) {
+				response.setStatus(400);//BAD-REQUEST-CODE
+				e.printStackTrace();
+				return;
+			} catch (SQLException e) {
+				response.setStatus(599);//SQL-ERROR-CODE
+				e.printStackTrace();
+				return;
 			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+	    } catch (Exception e) {
+			response.setStatus(500);//SERVER-ERROR-CODE
 			e.printStackTrace();
 		}
-		
-		
+	    
 		return;
 	}
 	

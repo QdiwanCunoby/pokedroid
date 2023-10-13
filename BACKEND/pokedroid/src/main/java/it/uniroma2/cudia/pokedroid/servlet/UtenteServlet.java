@@ -43,13 +43,6 @@ public class UtenteServlet extends HttpServlet {
 	}
 	
 	@Override
-	public void destroy() {
-		System.out.print("UtenteServlet. Closing DB connection...");
-		dao.closeConnection();
-		System.out.println("DONE.");
-	}
-	
-	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("UtenteServlet. Invoking a doPost method.");
@@ -76,7 +69,7 @@ public class UtenteServlet extends HttpServlet {
 		}
 		
 		if( utente.getEmail() == null || utente.getEmail() == null ) {
-			response.setStatus(404);
+			response.setStatus(400);
 			response.getWriter().append("password or email are null");
 			return;
 		}
@@ -89,10 +82,10 @@ public class UtenteServlet extends HttpServlet {
 				response.getWriter().append("true");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			response.setStatus(499);//SQL-ERROR-CODE
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			response.setStatus(500);//SERVER-STATUS-CODE
 			e.printStackTrace();
 		}
 		
@@ -104,13 +97,33 @@ public class UtenteServlet extends HttpServlet {
 			throws ServletException, IOException {
 		System.out.println("UtenteServlet. Invoking a doGet method.");
 		
-		PrintWriter out = response.getWriter();
-		ProspettoUtenteDTO prospettoUtente = dao.checkRegistrazioneUtenza(request.getParameter("email"),request.getParameter("password"));
-		if( prospettoUtente != null) {
-			response.getWriter().append(prospettoUtente.toJsonString());
+		if(request.getParameter("email")==null || request.getParameter("password")==null){
+			response.setStatus(400);//BAD-REQUEST-CODE
+			return;
 		}
-		else {
-			response.getWriter().append(null);
+		
+		try {
+			PrintWriter out = response.getWriter();
+			ProspettoUtenteDTO prospettoUtente = dao.checkRegistrazioneUtenza(request.getParameter("email"),request.getParameter("password"));
+			if( prospettoUtente != null) {
+				response.getWriter().append(prospettoUtente.toJsonString());
+			}
+			else {
+				response.getWriter().append(null);
+			}
+		} catch(Exception e) {
+			response.setStatus(500);//SERVER-STATUS-CODE
+			e.printStackTrace();
+			return;
 		}
+		
 	}
+	
+	@Override
+	public void destroy() {
+		System.out.print("UtenteServlet. Closing DB connection...");
+		dao.closeConnection();
+		System.out.println("DONE.");
+	}
+	
 }

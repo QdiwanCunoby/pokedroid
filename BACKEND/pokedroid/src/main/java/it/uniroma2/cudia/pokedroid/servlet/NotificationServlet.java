@@ -40,7 +40,7 @@ public class NotificationServlet extends HttpServlet {
 		String userName = getInitParameter("userName");
 		String password = getInitParameter("password");
 
-		System.out.print("NotificationServlet. Opening DB connection...");
+		System.out.print("NotificationServlet. Opening Firebase connection...");
 		
 		FirebaseOptions options = null;
 		FileInputStream serviceAccount = null;
@@ -50,7 +50,6 @@ public class NotificationServlet extends HttpServlet {
 			serviceAccount =
 					new FileInputStream("D:\\Radice\\Learn\\universita\\triennale\\dasostenere\\android\\PROGETTOESAME\\BACKEND\\pokedroid\\conf-service\\pokedroid-b4317-firebase-adminsdk-26z7i-c46a975d52.json");
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -59,7 +58,6 @@ public class NotificationServlet extends HttpServlet {
 					  .setCredentials(GoogleCredentials.fromStream(serviceAccount))
 					  .build();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -81,7 +79,7 @@ public class NotificationServlet extends HttpServlet {
 		    BufferedReader reader = request.getReader();
 		    while ((line = reader.readLine()) != null)
 		      jb.append(line);
-		  } catch (Exception e) { /*report an error*/ }
+		  
 
 		
 			System.out.println(jb.toString());
@@ -104,20 +102,23 @@ public class NotificationServlet extends HttpServlet {
 			try {
 				responseFirebase = FirebaseMessaging.getInstance().send(message);
 			} catch (FirebaseMessagingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e.getStackTrace();
+				response.setStatus(598);//ERROR-FIREBASE-CODE
+				return;
 			}
 			// Response is a message ID string.
 			System.out.println("Successfully sent message: " + responseFirebase);
-		
+		  } catch (Exception e) { 
+			  e.getStackTrace();
+			  response.setStatus(500);//ERROR-SERVER-CODE
+		  }
 			return;
 		
 	}
 	
 	@Override
 	public void destroy() {
-		System.out.print("UserServlet. Closing DB connection...");
-		
+		System.out.print("NotificationServlet. Closing Firebase connection...");
 		System.out.println("DONE.");
 	}
 }
