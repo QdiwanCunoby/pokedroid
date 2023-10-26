@@ -19,12 +19,12 @@ public class AccessActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_access);
 
-        Thread t = new Thread(new AccessActivity.MyRunnable());// instantiate thread to start check if user is yet logged
+        Thread t = new Thread(new CheckIsLoggedRunnable());// instantiate thread to start check if user is yet logged
         t.start(); // start thread
     }
-    public class MyRunnable implements Runnable {
+    public class CheckIsLoggedRunnable implements Runnable {
 
-        public MyRunnable() {
+        public CheckIsLoggedRunnable() {
 
         }
 

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
@@ -32,6 +33,7 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.fragment.ListaPokemonFragment;
 import it.cudia.studio.android.pokedroid.fragment.ProfileFragment;
 import it.cudia.studio.android.pokedroid.fragment.RiscattaPokemonFragment;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
@@ -122,6 +124,18 @@ public class MainActivity extends AppCompatActivity {
                 dialog.setDialogWarning("non hai accettato la richiesta di amicizia!");
                 dialog.show(getSupportFragmentManager(),"CustomDialog");
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+        if(f instanceof ListaPokemonFragment) {
+            Log.d(TAG, "onBackPressed() called and go back 1");
+        } else {
+            Log.d(TAG, "onBackPressed() called and go back 2");
+            super.onBackPressed();
         }
     }
 
