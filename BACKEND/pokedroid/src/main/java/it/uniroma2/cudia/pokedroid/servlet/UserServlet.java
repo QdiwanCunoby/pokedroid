@@ -1,5 +1,5 @@
 package it.uniroma2.cudia.pokedroid.servlet;
-
+import jakarta.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,7 +16,7 @@ import it.uniroma2.cudia.pokedroid.dao.UserDAO;
 import it.uniroma2.cudia.pokedroid.dao.UserDAOJDBCImpl;
 import it.uniroma2.cudia.pokedroid.entity.User;
 import it.uniroma2.cudia.pokedroid.entity.Utente;
-
+import jakarta.servlet.ServletContext;
 public class UserServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -6117027497998497053L;
@@ -33,11 +33,12 @@ public class UserServlet extends HttpServlet {
 
 	@Override
 	public void init() throws ServletException {
-		String ip = getInitParameter("ip");
-		String port = getInitParameter("port");
-		String dbName = getInitParameter("dbName");
-		String userName = getInitParameter("userName");
-		String password = getInitParameter("password");
+		ServletContext context = getServletContext();
+		String ip = context.getInitParameter("ip");
+		String port = context.getInitParameter("port");
+		String dbName = context.getInitParameter("dbName");
+		String userName = context.getInitParameter("userName");
+		String password = context.getInitParameter("password");
 
 		System.out.print("UserServlet. Opening DB connection...");
 

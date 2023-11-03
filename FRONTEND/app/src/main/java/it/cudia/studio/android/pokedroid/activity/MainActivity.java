@@ -166,6 +166,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public class MakeQuery implements Runnable{
+
+        int v;
+        MakeQuery(int v){
+            this.v = v;
+        }
+
+        @Override
+        public void run() {
+            AppDatabase db = AppDatabase.getInstance(getApplicationContext());
+            db.userDao().UpdateAvanzamentoPokedex((int)calcolaPercentuale(this.v,151));
+        }
+    }
+
+    public double calcolaPercentuale(double numero, double totale) {
+        if (totale == 0) {
+            throw new IllegalArgumentException("Il totale non può essere zero.");
+        }
+
+        double percentuale = (numero / totale) * 100;
+        return percentuale;
+    }
+
     public class SaveAvanzamentoPokedexDBlocal implements Runnable{
 
         public SaveAvanzamentoPokedexDBlocal(){}
@@ -186,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
-                                        db.userDao().UpdateAvanzamentoPokedex(response.getInt("avanzamento"));
+                                        new Thread(new MakeQuery(response.getInt("avanzamento"))).start();
                                     } catch (JSONException e) {
                                         throw new RuntimeException(e);
                                     }
@@ -252,13 +275,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class RetrivePokedexIdLocalDBUseQrRunnable implements Runnable {
-
+        Handler handler;
         String qrText;
         public RetrivePokedexIdLocalDBUseQrRunnable(String qrText) {
             this.qrText = qrText;
         }
+        public class LooperThread extends Thread{
+            public Handler handler;
 
+            @Override
+            public void run() {
+                Looper.prepare();
+                handler = new Handler();
+                Looper.loop();
+            }
+        }
         public void run() {
+            LooperThread looperThread = new LooperThread();
+            looperThread.start();
+
             Log.d(TAG, "run() called");
             AppDatabase db = AppDatabase.getInstance(getBaseContext());
 
@@ -291,6 +326,8 @@ public class MainActivity extends AppCompatActivity {
                                         dialog.setDialogWarning("il pokemon e' gia' stato riscattato!");
                                     }else if(response.getString("esito").equals("true")){
                                         dialog.setDialogRight("nuovo pokemon riscattato con successo!");
+                                        looperThread.handler.post(new SaveAvanzamentoPokedexDBlocal());
+
                                     }else{
                                         dialog.setDialogWrong("qualcosa e' andato storto, si e' verificato un disservizio!");
                                     }
