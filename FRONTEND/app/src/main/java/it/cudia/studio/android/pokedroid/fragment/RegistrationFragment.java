@@ -2,6 +2,7 @@ package it.cudia.studio.android.pokedroid.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -70,6 +71,7 @@ public class RegistrationFragment extends Fragment {
      * @return A new instance of fragment registrationFragment.
      */
     // TODO: Rename and change types and number of parameters
+    @NonNull
     public static RegistrationFragment newInstance(String param1, String param2) {
         RegistrationFragment fragment = new RegistrationFragment();
         Bundle args = new Bundle();

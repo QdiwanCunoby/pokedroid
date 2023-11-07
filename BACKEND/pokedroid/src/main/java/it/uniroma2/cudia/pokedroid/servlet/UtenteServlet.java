@@ -1,5 +1,6 @@
 package it.uniroma2.cudia.pokedroid.servlet;
 
+import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -109,7 +110,15 @@ public class UtenteServlet extends HttpServlet {
 				response.getWriter().append(prospettoUtente.toJsonString());
 			}
 			else {
-				response.getWriter().append(null);
+				response.setStatus(401);//NO-AUTHENTICATE
+				JSONObject jsonObject = new JSONObject();
+
+		        // Put key-value pairs into the JSON object
+		        jsonObject.put("login", true);
+		        
+		        // Convert the JSON object to a JSON string
+		        String jsonString = jsonObject.toString();
+				out.write(jsonString);
 			}
 		} catch(Exception e) {
 			response.setStatus(500);//SERVER-STATUS-CODE

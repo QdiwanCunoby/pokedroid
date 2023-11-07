@@ -143,9 +143,16 @@ public class LoginFragment extends Fragment {
                             @Override
                             public void onResponse(JSONObject response) {
                                 Log.d(TAG, "onResponse() called with: response = [" + response + "]");
-                                if(response != null){// if response is OK attivate dialog to comunicate user the right bheaviour
-                                    dialog.setDialogRight("Account reggistrato correttamente");
-                                    dialog.show(getFragmentManager(),"CustomDialog");
+                                try {
+                                    if(response != null && response.getBoolean("login")){
+
+                                    }
+                                    else if(response != null){// if response is OK attivate dialog to comunicate user the right bheaviour
+                                        dialog.setDialogRight("Account reggistrato correttamente");
+                                        dialog.show(getFragmentManager(),"CustomDialog");
+                                    }
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
                                 }
                                     /*IN THIS IF AND ELSE CODE BLOCK, THERE IS A CHECK ABOUT THE USER ACTIVATION
                                     OF THE OPTION TO REMAIN AUTHENTICATE WHEN CLOSE APP AND RESTART IN A SECOND MOMENT*/
@@ -190,6 +197,8 @@ public class LoginFragment extends Fragment {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 // TODO: Handle error
+                                dialog.setDialogWrong("Credenziali errate!");
+                                dialog.show(getFragmentManager(),"CustomDialog");
                                 Log.d(TAG, "onErrorResponse() called with: error = [" + error + "]");
                             }
                         });

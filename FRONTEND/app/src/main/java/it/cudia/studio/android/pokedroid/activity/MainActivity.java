@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
@@ -32,6 +33,7 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 import it.cudia.studio.android.pokedroid.R;
+import it.cudia.studio.android.pokedroid.fragment.ListaPokemonFragment;
 import it.cudia.studio.android.pokedroid.fragment.ProfileFragment;
 import it.cudia.studio.android.pokedroid.fragment.RiscattaPokemonFragment;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
@@ -133,6 +135,38 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        int backStackEntryCount = fragmentManager.getBackStackEntryCount();
+        if(backStackEntryCount==0){
+
+        }
+        else if (backStackEntryCount > 0) {
+            // There are fragments in the back stack
+
+            FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(backStackEntryCount - 1);
+                if(backStackEntry != null){
+                    String fragmentTag = backStackEntry.getName();
+
+                    if (fragmentTag != null && fragmentTag.equals("ListaPokemonFragment")) {
+                        // Handle the ListaPokemonFragment as needed
+                        // Block the back button press for ListaPokemonFragment
+                        // Implement your custom blocking logic here if needed
+                    } else {
+                        // For other fragments, allow normal back navigation
+                        super.onBackPressed();
+                    }
+                }
+
+        } else {
+            // No fragments in the back stack, allow normal back navigation
+            super.onBackPressed();
+        }
+    }
+
+
 
     public class MyRunnable implements Runnable {
 

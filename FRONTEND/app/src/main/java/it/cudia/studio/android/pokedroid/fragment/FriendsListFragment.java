@@ -162,7 +162,7 @@ public class FriendsListFragment extends Fragment {
                                     JSONObject jsonObject = (JSONObject) jsonArrayObject.opt(i);
 
                                     try {
-                                        data.add(new Friend(jsonObject.getString("username"),jsonObject.getDouble("completamentoPokedex")));
+                                        data.add(new Friend(jsonObject.getString("username"),calcolaPercentuale(jsonObject.getDouble("completamentoPokedex"),151)));
                                     } catch (JSONException e) {
                                         throw new RuntimeException(e);
                                     }
@@ -185,6 +185,15 @@ public class FriendsListFragment extends Fragment {
 
                 SingletonVolley.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectRequest);
             }
+        }
+
+        public double calcolaPercentuale(double numero, double totale) {
+            if (totale == 0) {
+                throw new IllegalArgumentException("Il totale non può essere zero.");
+            }
+
+            double percentuale = (numero / totale) * 100;
+            return percentuale;
         }
     }
 }

@@ -4,11 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,10 +26,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.activity.CaptureActivityPortrait;
@@ -278,7 +272,7 @@ public class RiscattaPokemonFragment extends Fragment {
                             public void onResponse(JSONObject response) {
                                 try {
 
-                                    new Thread(new MakeQuery(response.getInt("avanzamento"))).start();
+                                    new Thread(new PokemonAdvancementUpdate(response.getInt("avanzamento"))).start();
                                 } catch (JSONException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -296,17 +290,17 @@ public class RiscattaPokemonFragment extends Fragment {
         }
     }
 
-    public class MakeQuery implements Runnable{
+    public class PokemonAdvancementUpdate implements Runnable{
 
         int v;
-        MakeQuery(int v){
+        PokemonAdvancementUpdate(int v){
             this.v = v;
         }
 
         @Override
         public void run() {
             AppDatabase db = AppDatabase.getInstance(getActivity().getApplicationContext());
-            db.userDao().UpdateAvanzamentoPokedex((int)calcolaPercentuale(this.v,152));
+            db.userDao().UpdateAvanzamentoPokedex((int)calcolaPercentuale(this.v,151));
         }
     }
 

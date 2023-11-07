@@ -232,7 +232,7 @@ public class ProfileFragment extends Fragment {
             }
 
             if(db.userDao().loadAvanzamentoPokedex(1)!=null){
-                this.avanzamentoPokedex.setText(db.userDao().loadAvanzamentoPokedex(1).intValue() + "%");
+                this.avanzamentoPokedex.setText(calcolaPercentuale(db.userDao().loadAvanzamentoPokedex(1).intValue(),151) + "%");
             }
 
             if(db.userDao().loadUserEmail(1)!=null){
@@ -242,4 +242,12 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    public double calcolaPercentuale(double numero, double totale) {
+        if (totale == 0) {
+            throw new IllegalArgumentException("Il totale non può essere zero.");
+        }
+
+        double percentuale = (numero / totale) * 100;
+        return percentuale;
+    }
 }

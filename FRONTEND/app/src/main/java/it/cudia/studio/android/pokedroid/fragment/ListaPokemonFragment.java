@@ -88,6 +88,7 @@ public class ListaPokemonFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -304,10 +305,11 @@ public class ListaPokemonFragment extends Fragment {
                     @Override
                     public void run() {
 
-                        avanzamentoPokedex.setText(progress + "%");
+                        avanzamentoPokedex.setText((int)calcolaPercentuale(Double.valueOf(progress),Double.valueOf(151) ) + "%");
                         pbAvanzamento.setMax(100);
                         pbAvanzamento.setMin(0);
-                        pbAvanzamento.setProgress(progress);
+                        pbAvanzamento.setProgress((int)calcolaPercentuale(Double.valueOf(progress),Double.valueOf(151) ));
+
                     }
                 });
 
@@ -315,5 +317,13 @@ public class ListaPokemonFragment extends Fragment {
 
 
         }
+    }
+    public double calcolaPercentuale(double numero, double totale) {
+        if (totale == 0) {
+            throw new IllegalArgumentException("Il totale non può essere zero.");
+        }
+
+        double percentuale = (numero / totale) * 100;
+        return percentuale;
     }
 }
