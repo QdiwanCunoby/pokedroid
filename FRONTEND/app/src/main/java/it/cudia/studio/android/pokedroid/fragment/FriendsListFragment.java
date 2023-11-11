@@ -36,6 +36,7 @@ import it.cudia.studio.android.pokedroid.model.Friend;
 import it.cudia.studio.android.pokedroid.model.Pokemon;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 import it.cudia.studio.android.pokedroid.singleton.SingletonVolley;
+import it.cudia.studio.android.pokedroid.utility.Utility;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -162,7 +163,7 @@ public class FriendsListFragment extends Fragment {
                                     JSONObject jsonObject = (JSONObject) jsonArrayObject.opt(i);
 
                                     try {
-                                        data.add(new Friend(jsonObject.getString("username"),calcolaPercentuale(jsonObject.getDouble("completamentoPokedex"),151)));
+                                        data.add(new Friend(jsonObject.getString("username"), Utility.calcolaPercentuale(jsonObject.getDouble("completamentoPokedex"),151)));
                                     } catch (JSONException e) {
                                         throw new RuntimeException(e);
                                     }
@@ -187,14 +188,7 @@ public class FriendsListFragment extends Fragment {
             }
         }
 
-        public double calcolaPercentuale(double numero, double totale) {
-            if (totale == 0) {
-                throw new IllegalArgumentException("Il totale non può essere zero.");
-            }
 
-            double percentuale = (numero / totale) * 100;
-            return percentuale;
-        }
     }
 }
 

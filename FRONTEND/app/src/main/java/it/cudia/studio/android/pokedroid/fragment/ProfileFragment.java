@@ -30,6 +30,7 @@ import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
 import it.cudia.studio.android.pokedroid.model.AppDatabase;
 import it.cudia.studio.android.pokedroid.services.MyFirebaseInstanceIDService;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
+import it.cudia.studio.android.pokedroid.utility.Utility;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -232,22 +233,12 @@ public class ProfileFragment extends Fragment {
             }
 
             if(db.userDao().loadAvanzamentoPokedex(1)!=null){
-                this.avanzamentoPokedex.setText(calcolaPercentuale(db.userDao().loadAvanzamentoPokedex(1).intValue(),151) + "%");
+                this.avanzamentoPokedex.setText(Utility.calcolaPercentuale(db.userDao().loadAvanzamentoPokedex(1),151) + "%");
             }
 
             if(db.userDao().loadUserEmail(1)!=null){
                 this.email.setText(db.userDao().loadUserEmail(1));
             }
-
         }
-    }
-
-    public double calcolaPercentuale(double numero, double totale) {
-        if (totale == 0) {
-            throw new IllegalArgumentException("Il totale non può essere zero.");
-        }
-
-        double percentuale = (numero / totale) * 100;
-        return percentuale;
     }
 }
