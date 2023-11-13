@@ -43,7 +43,7 @@ public class AmiciziaDAOJDBCImpl  implements AmiciziaDAO {
 			
 			PreparedStatement pstmt = conn.prepareStatement(SQL_SELECT);
 			affectedRows = pstmt.executeQuery();
-			
+			conn.commit();
 			while(affectedRows.next()) {
 				idUsername.add(affectedRows.getDouble(1));
 			}
@@ -52,7 +52,7 @@ public class AmiciziaDAOJDBCImpl  implements AmiciziaDAO {
 					+ "VALUES ('" + idUsername.get(0) + "','" + idUsername.get(1) + "')";
 			pstmt = conn.prepareStatement(SQL_INSERT);
 			stateUpdate = pstmt.executeUpdate();
-			
+			conn.commit();
 		} catch (SQLException e) {
 			
 			conn.rollback();

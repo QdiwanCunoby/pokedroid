@@ -108,9 +108,9 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        EditText email = v.findViewById(R.id.etEmailAmico);
-        EditText password = v.findViewById(R.id.etCodiceAmico);
-        Button btAccedi = v.findViewById(R.id.btSendFrinedshipRequest);
+        EditText email = v.findViewById(R.id.etNewPassword);
+        EditText password = v.findViewById(R.id.etCurrentPassword);
+        Button btAccedi = v.findViewById(R.id.btSendChangePasswordRequest);
         CustomDialog dialog = new CustomDialog();
         saveLogin = (Switch) v.findViewById(R.id.swMantieniAccessoLog);
         saveLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

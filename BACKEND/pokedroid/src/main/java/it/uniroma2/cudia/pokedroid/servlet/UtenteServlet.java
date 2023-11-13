@@ -15,6 +15,7 @@ import org.json.JSONException;
 
 import it.uniroma2.cudia.pokedroid.dao.UtenteDAO;
 import it.uniroma2.cudia.pokedroid.dao.UtenteDAOJDBCImpl;
+import it.uniroma2.cudia.pokedroid.dto.ChangePasswordDTO;
 import it.uniroma2.cudia.pokedroid.dto.ProspettoUtenteDTO;
 import it.uniroma2.cudia.pokedroid.entity.Utente;
 
@@ -126,6 +127,51 @@ public class UtenteServlet extends HttpServlet {
 			return;
 		}
 		
+	}
+	
+	@Override
+	protected void doPut(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		System.out.println("UtenteServlet. Invoking a doPut method.");
+		
+		PrintWriter out = response.getWriter();
+		
+		BufferedReader reader = request.getReader();
+	    String line;
+	    StringBuilder sb = new StringBuilder();
+	    
+	    while ((line = reader.readLine()) != null) {
+		      sb.append(line);
+		}
+	    
+	    String jsonDataUtente =  sb.toString();
+		
+	    ChangePasswordDTO changePasswordDTO = null;
+		
+		try {
+			changePasswordDTO = ChangePasswordDTO.fromJSON(jsonDataUtente);
+		} catch (JSONException e) {
+			response.setStatus(500);//SERVER-STATUS-CODE
+			e.printStackTrace();
+		}
+		
+		try {
+			dao.checkUserPassword(changePasswordDTO.getEmail(), changePasswordDTO.getCurrentPassword());
+		} catch (SQLException e) {
+			response.setStatus(499);//SQL-ERROR-CODE
+			e.printStackTrace();
+			return;
+		}
+		try {
+			dao.changeUserPassword(changePasswordDTO.getEmail(), changePasswordDTO.getCurrentPassword(), changePasswordDTO.getNewPassword());
+		} catch (SQLException e) {
+			response.setStatus(499);//SQL-ERROR-CODE
+			e.printStackTrace();
+			return;
+		}
+		
+		out.append("{ 'passwordUpdate' : true }");
+        response.setStatus(200);
 	}
 	
 	@Override

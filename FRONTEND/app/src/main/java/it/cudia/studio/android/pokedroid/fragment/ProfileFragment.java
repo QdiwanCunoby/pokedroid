@@ -133,7 +133,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        Button friendList = view.findViewById(R.id.btSendFrinedshipRequest);
+        Button friendList = view.findViewById(R.id.btSendChangePasswordRequest);
 
         friendList.setOnClickListener( new View.OnClickListener(){
 
@@ -179,7 +179,7 @@ public class ProfileFragment extends Fragment {
         int[] pixels = new int[w * h];
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
-                pixels[y * w + x] = bitMatrix.get(x, y) ? Color.BLACK : Color.argb(95,197,3,3);
+                pixels[y * w + x] = bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE;//Color.argb(95,197,3,3);
             }
         }
 

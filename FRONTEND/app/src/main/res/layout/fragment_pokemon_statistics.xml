@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tvUsernameUserLista"
+                android:id="@+id/tvPokeName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nome Pokemon"
@@ -59,7 +59,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tvPercentualeAvanzamentoPokedex"
+                    android:id="@+id/tvPokeType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
@@ -36,6 +37,8 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -66,6 +69,8 @@ public class PokemonStatisticsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private TextView pokeName;
+    private TextView pokeType;
 
     private int forza, velocita, grinta, difesa, fortuna, astuzia, resistenza;
 
@@ -109,7 +114,6 @@ public class PokemonStatisticsFragment extends Fragment {
                 getString(factors.get(3)), getString(factors.get(4)), getString(factors.get(5))
                 , getString(factors.get(6)), getString(factors.get(7))};
 
-
         return mFactors;
     }
 
@@ -126,7 +130,8 @@ public class PokemonStatisticsFragment extends Fragment {
         factors.append(5, R.string.stat_difesa);
         factors.append(6, R.string.stat_astuzia);
         factors.append(7, R.string.stat_resistenza);
-
+        pokeName=v.findViewById(R.id.tvPokeName);
+        pokeType=v.findViewById(R.id.tvPokeType);
 
         getActivity().getSupportFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
             @Override
@@ -147,52 +152,68 @@ public class PokemonStatisticsFragment extends Fragment {
                         break;
                     case 1:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_normale));
+                        pokeType.setText("normale");
                         break;
                     case 2:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_lotta));
+                        pokeType.setText("lotta");
                         break;
                     case 3:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_volante));
+                        pokeType.setText("volante");
                         break;
                     case 4:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_veleno));
+                        pokeType.setText("veleno");
                         break;
                     case 5:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_terra));
+                        pokeType.setText("terra");
                         break;
                     case 6:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_roccia));
+                        pokeType.setText("roccia");
                         break;
                     case 7:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_coleottero));
+                        pokeType.setText("coleottero");
                         break;
                     case 8:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_spettro));
+                        pokeType.setText("spettro");
                         break;
                     case 9:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_fuoco));
+                        pokeType.setText("fuoco");
                         break;
                     case 10:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_acqua));
+                        pokeType.setText("acqua");
                         break;
                     case 11:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_erba));
+                        pokeType.setText("erba");
                         break;
                     case 12:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_elettro));
+                        pokeType.setText("elettro");
                         break;
                     case 13:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_spico));
+                        pokeType.setText("spico");
                         break;
                     case 14:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_chiaccio));
+                        pokeType.setText("ghiaccio");
                         break;
                     case 15:
                         lyBackgroundPokeStat.getBackground().setTint(getActivity().getBaseContext().getResources().getColor(R.color.type_drago));
+                        pokeType.setText("drago");
                         break;
                 }
 
                 // We use a String here, but any type that can be put in a Bundle is supported.
+                pokeName.setText(bundle.getString("nome"));
                 forza = bundle.getInt("forza");
                 velocita = bundle.getInt("velocita");
                 grinta = bundle.getInt("grinta");

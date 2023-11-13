@@ -53,6 +53,8 @@ public interface UserDao {
 
     @Query("UPDATE user SET profile_image = :img")
     void updateImgProfile(String img);
+    @Query("UPDATE user SET user_password = :password")
+    void updatePassword(String password);
 
 }
 

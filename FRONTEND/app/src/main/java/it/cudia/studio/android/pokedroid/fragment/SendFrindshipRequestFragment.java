@@ -16,22 +16,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.zxing.integration.android.IntentIntegrator;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.activity.CaptureActivityPortrait;
 import it.cudia.studio.android.pokedroid.fragment.dialog.CustomDialog;
-import it.cudia.studio.android.pokedroid.model.AppDatabase;
-import it.cudia.studio.android.pokedroid.services.MyFirebaseInstanceIDService;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
-import it.cudia.studio.android.pokedroid.singleton.SingletonVolley;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,9 +84,9 @@ public class SendFrindshipRequestFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_send_frindship_request, container, false);
 
-        etCodiceAmico = view.findViewById(R.id.etCodiceAmico);
-        etEmailAmico = view.findViewById(R.id.etEmailAmico);
-        btSendFrinedshipRequest = view.findViewById(R.id.btSendFrinedshipRequest);
+        etCodiceAmico = view.findViewById(R.id.etCurrentPassword);
+        etEmailAmico = view.findViewById(R.id.etNewPassword);
+        btSendFrinedshipRequest = view.findViewById(R.id.btSendChangePasswordRequest);
 
         btSendFrinedshipRequest.setOnClickListener(new View.OnClickListener() {
             @Override

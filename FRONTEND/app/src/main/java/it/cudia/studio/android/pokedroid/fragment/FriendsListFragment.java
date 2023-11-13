@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -26,6 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.Vector;
 
@@ -55,6 +57,9 @@ public class FriendsListFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private TextView labelEmptyList;
+    private TextView tipsEmptyList;
 
     public FriendsListFragment() {
         // Required empty public constructor
@@ -97,6 +102,8 @@ public class FriendsListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friends_list, container, false);
 
+        labelEmptyList = view.findViewById(R.id.txEmptyFriendList);
+        tipsEmptyList = view.findViewById(R.id.txTipsIfEmptyFriendList);
         FloatingActionButton addFriend = view.findViewById(R.id.addFriend);
 
         addFriend.setOnClickListener(new View.OnClickListener() {
@@ -155,19 +162,23 @@ public class FriendsListFragment extends Fragment {
                                 } catch (JSONException e) {
                                     throw new RuntimeException(e);
                                 }
-
+                                if(jsonArrayObject.length() ==0){
+                                    labelEmptyList.setVisibility(View.VISIBLE);
+                                    tipsEmptyList.setVisibility(View.VISIBLE);
+                                }
                                 int i = 0;
 
-                                while(i < response.length()){
+                                while(i < jsonArrayObject.length()){
 
                                     JSONObject jsonObject = (JSONObject) jsonArrayObject.opt(i);
 
-                                    try {
-                                        data.add(new Friend(jsonObject.getString("username"), Utility.calcolaPercentuale(jsonObject.getDouble("completamentoPokedex"),151)));
-                                    } catch (JSONException e) {
-                                        throw new RuntimeException(e);
+                                    if(jsonObject != null){
+                                        try {
+                                            data.add(new Friend(jsonObject.getString("username"), Utility.calcolaPercentuale(jsonObject.getDouble("completamentoPokedex"), 151)));
+                                        } catch (JSONException e) {
+                                            throw new RuntimeException(e);
+                                        }
                                     }
-
                                     i++;
                                 }
                                 recyclerView.setHasFixedSize(true);

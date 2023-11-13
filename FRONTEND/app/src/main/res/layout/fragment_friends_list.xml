@@ -20,6 +20,25 @@
             android:orientation="vertical"
             android:paddingTop="80dp">
 
+            <TextView
+                android:id="@+id/txEmptyFriendList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Friends List Empty"
+                android:textColor="@color/input_background"
+                android:textSize="34sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/txTipsIfEmptyFriendList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="use plus button to send frindship request"
+                android:textColor="@color/input_background"
+                android:visibility="gone" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewListaFriend"
                 android:layout_width="match_parent"

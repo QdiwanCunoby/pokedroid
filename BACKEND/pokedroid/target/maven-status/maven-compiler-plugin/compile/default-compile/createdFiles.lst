@@ -15,6 +15,7 @@ it\uniroma2\cudia\pokedroid\dao\AvanzamentoDAO.class
 it\uniroma2\cudia\pokedroid\dao\AmiciziaDAOJDBCImpl.class
 it\uniroma2\cudia\pokedroid\dao\UtenteDAOJDBCImpl.class
 it\uniroma2\cudia\pokedroid\servlet\PokedexServlet.class
+it\uniroma2\cudia\pokedroid\dto\ChangePasswordDTO.class
 it\uniroma2\cudia\pokedroid\entity\Amicizia.class
 it\uniroma2\cudia\pokedroid\dao\PokedexDAO.class
 it\uniroma2\cudia\pokedroid\dao\PokemonDAOJDBCImpl.class

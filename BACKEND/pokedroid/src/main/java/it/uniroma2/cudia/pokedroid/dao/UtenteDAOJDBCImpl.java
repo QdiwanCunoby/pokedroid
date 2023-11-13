@@ -117,6 +117,52 @@ public class UtenteDAOJDBCImpl implements UtenteDAO {
 		}
 	}
 	
+	@Override
+	public boolean checkUserPassword(String email, String password) throws SQLException {
+		String query = "SELECT COUNT(uten_id) FROM utente WHERE uten_mail = '" + email + "' AND uten_password = '" + password +"'";
+		conn.setAutoCommit(false);
+		System.out.println(query);
+		int numeroPokemon = -1;
+		try {
+		ResultSet affectedRows = null;
+		PreparedStatement pstmt = conn.prepareStatement(query);
+		affectedRows = pstmt.executeQuery();
+			if(affectedRows.next()) {
+				numeroPokemon = affectedRows.getInt(1);
+			}
+			if(numeroPokemon!=1) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		} catch (SQLException e) {
+					
+			conn.rollback();
+			e.printStackTrace();
+			return false;
+		}	
+	}
+	
+	@Override
+	public boolean changeUserPassword(String email, String password, String newPassword) throws SQLException {
+		conn.setAutoCommit(false);
+		String query = "UPDATE utente SET uten_password = '" + newPassword + "' WHERE uten_mail = '" + email + "' && uten_password = '" + password + "'";
+		System.out.println(query);
+		try {
+			Statement stmt = conn.createStatement();
+			int affectedRows;
+			affectedRows = stmt.executeUpdate(query);
+			conn.commit();
+		}
+		catch (SQLException e) {
+			conn.rollback();
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
 	public void closeConnection() {
 		try {
 			conn.close();
@@ -135,4 +181,5 @@ public class UtenteDAOJDBCImpl implements UtenteDAO {
 		}
 	}
 
+	
 }

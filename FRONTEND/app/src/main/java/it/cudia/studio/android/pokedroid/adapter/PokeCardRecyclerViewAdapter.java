@@ -62,6 +62,7 @@ public class PokeCardRecyclerViewAdapter extends RecyclerView.Adapter<PokeCardRe
                 public void onClick(View v) {
                     Log.d(TAG, mData.get(holder.getAdapterPosition()).toString());
                     Bundle result = new Bundle();
+                    result.putString("nome", mData.get(holder.getAdapterPosition()).getNome());
                     result.putInt("forza", mData.get(holder.getAdapterPosition()).getForza());
                     result.putInt("velocita", mData.get(holder.getAdapterPosition()).getVelocita());
                     result.putInt("grinta", mData.get(holder.getAdapterPosition()).getGrinta());
@@ -74,8 +75,10 @@ public class PokeCardRecyclerViewAdapter extends RecyclerView.Adapter<PokeCardRe
                     Log.d(TAG, result.toString());
 
                     FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
-                    //  NavHostFragment.findNavController(manager.findFragmentById(R.id.fgListaPokemon)).navigate(R.id.action_listaPokemonFragment_to_pokemonStatisticsFragment);
                     manager.setFragmentResult("requestKey", result);
+                    //Bundle statisticPokemonBundle = new Bundle();
+                    //statisticPokemonBundle.putString("","");
+                    //statisticPokemonBundle.putString("","");
                     Navigation.findNavController(v).navigate(R.id.action_listaPokemonFragment_to_pokemonStatisticsFragment);
                 }
             });

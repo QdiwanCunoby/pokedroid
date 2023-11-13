@@ -2,7 +2,10 @@ package it.uniroma2.cudia.pokedroid.dto;
 
 import java.util.ArrayList;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import it.uniroma2.cudia.pokedroid.entity.Utente;
 
 public class ListaFriendDTO {
 	
@@ -45,6 +48,8 @@ public class ListaFriendDTO {
 			this.completamentoPokedex = completametoPokedex;
 		}		
 	}
+	
+	
 	
 	public String toJsonString() {
 		return new JSONObject(this).toString();	

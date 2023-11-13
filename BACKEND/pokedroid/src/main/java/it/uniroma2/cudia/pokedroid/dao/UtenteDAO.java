@@ -12,6 +12,9 @@ public interface UtenteDAO {
 	
 	public ProspettoUtenteDTO checkRegistrazioneUtenza(String email, String password);
 	
+	public boolean checkUserPassword(String email,String password) throws SQLException;
+	public boolean changeUserPassword(String email,String password, String newPassword) throws SQLException;
+	
 	public void closeConnection();
 
 }

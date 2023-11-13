@@ -1,17 +1,13 @@
 package it.cudia.studio.android.pokedroid.fragment;
 
 import static androidx.core.app.ActivityCompat.invalidateOptionsMenu;
-import static com.google.android.material.color.utilities.MaterialDynamicColors.error;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -21,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -44,7 +39,6 @@ import it.cudia.studio.android.pokedroid.R;
 import it.cudia.studio.android.pokedroid.adapter.PokeCardRecyclerViewAdapter;
 import it.cudia.studio.android.pokedroid.model.AppDatabase;
 import it.cudia.studio.android.pokedroid.model.Pokemon;
-import it.cudia.studio.android.pokedroid.request.BooleanRequest;
 import it.cudia.studio.android.pokedroid.singleton.PokedroidToolbar;
 import it.cudia.studio.android.pokedroid.singleton.SingletonVolley;
 import it.cudia.studio.android.pokedroid.utility.Utility;
@@ -168,16 +162,12 @@ public class ListaPokemonFragment extends Fragment {
                 NavHostFragment.findNavController(ListaPokemonFragment.this).navigate(R.id.action_listaPokemonFragment_to_riscattaPokemonFragment);
             }
         });
-        /*ListaPokemonFragment home = new ListaPokemonFragment();
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        manager.beginTransaction().add(R.id.fgListaPokemon, home).commit();*/
-        // data to populate the RecyclerView with
 
         Thread t = new Thread(new RetrivePasswordAndEmailLocalDBRunnable(view.findViewById(R.id.recyclerViewListaPokemon)));
         t.start();
 
-        Thread t_setUserData = new Thread(new RetriveDataUserLocalDBRunnable(view.findViewById(R.id.tvUsernameUserLista),
-                view.findViewById(R.id.tvPercentualeAvanzamentoPokedex),
+        Thread t_setUserData = new Thread(new RetriveDataUserLocalDBRunnable(view.findViewById(R.id.tvPokeName),
+                view.findViewById(R.id.tvPokeType),
                 view.findViewById(R.id.pbAvanzamento)));
         t_setUserData.start();
 

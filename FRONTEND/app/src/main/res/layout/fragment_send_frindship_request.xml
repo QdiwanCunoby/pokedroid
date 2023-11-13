@@ -45,7 +45,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <EditText
-                android:id="@+id/etCodiceAmico"
+                android:id="@+id/etCurrentPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
@@ -62,7 +62,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/etEmailAmico"
+                android:id="@+id/etNewPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
@@ -79,7 +79,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/btSendFrinedshipRequest"
+                android:id="@+id/btSendChangePasswordRequest"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/custom_button_red"

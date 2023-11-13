@@ -102,6 +102,11 @@ public class CustomDialog extends DialogFragment {
         this.contenutoDialog = contenutoDialog;
     }
 
+    public void setDialogSuccesUpdatePassword(String contenutoDialog){
+        typeDialog = type_dialog.SUCCES_UPDATE_PASSWORD;
+        this.contenutoDialog = contenutoDialog;
+    }
+
     public void setDialogWarning(String contenutoDialog){
         typeDialog = type_dialog.WARNING;
         this.contenutoDialog = contenutoDialog;
@@ -133,5 +138,6 @@ enum type_dialog{
     RIGHT,
     WARNING,
     LOGOUT,
-    SUCCES_RISCATTA_POKEMON
+    SUCCES_RISCATTA_POKEMON,
+    SUCCES_UPDATE_PASSWORD
 }
